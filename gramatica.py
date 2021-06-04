@@ -2,80 +2,38 @@
 ##****************************************Parte Lexica*****************************************************
 
 tokens = (
+    
     #*******************tipos de datos**********************
-    'TKN_INT',
-    'TKN_DOUBLE',
-    'TKN_BOOLEAN',
-    'TKN_CHAR',
-    'TKN_STRING',
-    'TKN_NULL',
+    'TKN_INT','TKN_DOUBLE','TKN_BOOLEAN','TKN_CHAR','TKN_STRING','TKN_NULL',
     'TKN_NEW',
+
     #*****************operadores aritmeticos****************
-    'TKN_MAS',
-    'TKN_MENOS',
-    'TKN_POR',
-    'TKN_DIV',
-    'TKN_POTENCIA',
-    'TKN_MOD',
-    'TKN_PUNTO',
+    'TKN_MAS','TKN_MENOS','TKN_POR','TKN_DIV','TKN_POTENCIA','TKN_MOD','TKN_PUNTO',
 
-    'TKN_PTCOMA',
-    'TKN_LLAVEIZQ',
-    'TKN_LLAVEDER',
-    'TKN_PARIZQ',
-    'TKN_PARDER',
-    'TKN_CORCHETEIZQ',
-    'TKN_CORCHETEDER',
-    'TKN_COMA',
-    'TKN_INCREMENTO',
-    'TKN_DECREMENTO',
+    'TKN_PTCOMA','TKN_LLAVEIZQ','TKN_LLAVEDER','TKN_PARIZQ','TKN_PARDER','TKN_CORCHETEIZQ','TKN_CORCHETEDER',
+    'TKN_COMA','TKN_INCREMENTO','TKN_DECREMENTO',
+    
     #********************Relacionales********************
-    'TKN_NOT',
-    'TKN_IGUAL_IGUAL',
-    'TKN_DIFERENTE',
-    'TKN_MENOR',
-    'TKN_MAYOR',
-    'TKN_MENORI',
-    'TKN_MAYORI',
-
-    'TKN_DOSPUNTOS',
-    'TKN_IGUAL',
+    'TKN_IGUAL_IGUAL','TKN_DIFERENTE','TKN_MENOR',
+    'TKN_MAYOR','TKN_MENORI','TKN_MAYORI','TKN_DOSPUNTOS','TKN_IGUAL',
+    
     #**********************Logicos***********************
-    'TKN_OR',
-    'TKN_AND',
-    'TKN_NOT',
+    'TKN_OR','TKN_AND','TKN_NOT','TKN_TRUE','TKN_FALSE',
 
-    'TKN_TRUE',
-    'TKN_FALSE',
     #********************Palabras Reservadas*************   
-    'TKN_SWITCH',
-    'TKN_CASE',
-    'TKN_BREAK',
+    'TKN_SWITCH','TKN_CASE','TKN_BREAK',
 
-    'TKN_IF',
-    'TKN_ELSE',
-    'TKN_DEFAULT',
+    'TKN_IF','TKN_ELSE','TKN_DEFAULT',
 
-    'TKN_WHILE',
-    'TKN_FOR',
-    'TKN_CONTINUE',
+    'TKN_WHILE','TKN_FOR','TKN_CONTINUE','TKN_VOID','TKN_RETURN',
 
-    'TKN_VOID',
-    'TKN_RETURN',
+    'TKN_READ','TKN_TOLOWER','TKN_PRINT','TKN_TO_UPPER','TKN_LENGTH','TKN_TRUNCATE',
+    'TKN_ROUND','TKN_TYPE_OF','TKN_MAIN',
 
-    'TKN_READ',
-    'TKN_TOLOWER',
-    'TKN_PRINT',
-    'TKN_TO_UPPER',
-    'TKN_LENGTH',
-    'TKN_TRUNCATE',
+    'ENTERO', 'DECIMAL'
 
-    'TKN_ROUND',
-    'TKN_TYPE_OF',
-
-    'TKN_MAIN'
 )
-#----------------------tokens----------------------
+
 #tipos de datos
 t_TKN_INT       = r'int'
 t_TKN_DOUBLE    = r'double'
@@ -95,8 +53,8 @@ t_TKN_MOD       = r'%'
 t_TKN_PUNTO     = r'\.'
 
 t_TKN_PTCOMA        = r';'
-t_TKN_LLAVEIZQ      = r'{'
-t_TKN_LLAVEDER      = r'}'
+t_TKN_LLAVEIZQ      = r'\{'
+t_TKN_LLAVEDER      = r'\}'
 t_TKN_PARIZQ        = r'\('
 t_TKN_PARDER        = r'\)'
 t_TKN_CORCHETEIZQ   = r'\['
@@ -153,13 +111,14 @@ t_TKN_MAIN      = r'main'
 
 # Caracteres ignorados
 t_ignore = " \t"
+
 # Comentario de una línea
 def t_ComentarioSimple(t):
-    r'#.*\n'
+    r'\#.*\n'
     t.lexer.lineno += 1    
 # Comentario de múltiples líneas
 def t_ComentarioMulti(t):
-    r'#\*(.|\n)*?\*#'
+    r'\#\*(.|\n)*?\*\#'
     t.lexer.lineno += t.value.count('\n')
 
 def t_newline(t):
@@ -170,8 +129,6 @@ def t_error(t): #LEXICOS
     print('caracter no reconocido: ' + str(t.value[0]))
     # almacenamiento de errores lexicos
     t.lexer.skip(1)
-
-
 
 def t_DECIMAL(t):
     r'\d+\.\d+'
@@ -191,24 +148,23 @@ def t_ENTERO(t):
         t.value = 0
     return t
 
-
-
-
-
-
-
-
-
-
 # Construyendo el analizador lexico
 import ply.lex as lex
 lexer = lex.lex()
 
+
+
+
 # Presedencia
 precedence = (
-    ('left', 'MAS', 'MENOS'),
-    ('left', 'POR', 'DIV'),
-    ('right', 'UMENOS')
+    ('left', 'TKN_MAS', 'TKN_MENOS'),
+    ('left', 'TKN_POR', 'TKN_DIV', 'TKN_MOD'),
+    ('left', 'TKN_POTENCIA'),
+    ('right', 'UMENOS'),
+    ('left','TKN_IGUAL_IGUAL','TKN_DIFERENTE','TKN_MENOR', 'TKN_MENORI', 'TKN_MAYOR', 'TKN_MAYORI'),
+    ('right', 'TKN_NOT'),
+    ('left', 'TKN_AND'),
+    ('left', 'TKN_OR')
 )
 
 #********************************************Parte sintactica********************************************
@@ -221,31 +177,31 @@ def p_instrucciones(t):
 
 def p_instruccion(t):
     '''
-    instruccion : ROPERAR CORA expresion CORC PTCOMA 
+    instruccion : TKN_CASE TKN_LLAVEIZQ expresion TKN_LLAVEDER TKN_PTCOMA 
     '''
     print('El resultado es: ' + str(t[3]))
 
 def p_expresion_binaria(t):
     '''
-    expresion : expresion MAS expresion
-            | expresion MENOS expresion
-            | expresion POR expresion
-            | expresion DIV expresion
+    expresion : expresion TKN_MAS expresion
+            | expresion TKN_MENOS expresion
+            | expresion TKN_POR expresion
+            | expresion TKN_DIV expresion
     '''
-    if t[2] == '+': t[0] = t[1] + t[3]
-    elif t[2] == '-': t[0] = t[1] - t[3]
-    elif t[2] == '*': t[0] = t[1] * t[3]
-    elif t[2] == '/': t[0] = t[1] / t[3]
+    if    t[2] == '+': t[0] = t[1] + t[3]
+    elif  t[2] == '-': t[0] = t[1] - t[3]
+    elif  t[2] == '*': t[0] = t[1] * t[3]
+    elif  t[2] == '/': t[0] = t[1] / t[3]
 
 def p_expresion_unaria(t):
     '''
-    expresion : MENOS expresion %prec UMENOS
+    expresion : TKN_MENOS expresion %prec UMENOS
     '''
     t[0] = -t[2]
 
 def p_expresion_agrupacion(t):
     '''
-    expresion : PARA expresion PARC
+    expresion : TKN_PARIZQ expresion TKN_PARDER
     '''
     t[0] = t[2]
 
