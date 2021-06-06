@@ -149,7 +149,7 @@ def t_ENTERO(t):
     return t
 
 # Construyendo el analizador lexico
-import ply.lex as lex
+import Analizador.Gramatica.ply.lex as lex
 lexer = lex.lex()
 
 
@@ -171,7 +171,7 @@ precedence = (
 
 def p_instrucciones(t):
     '''
-    instrucciones : instruccion instrucciones
+    instrucciones : instrucciones instruccion
                     | instruccion
     '''
 
@@ -216,10 +216,10 @@ def p_error(t):
     print('Error sintactico en: ' + str(t.value))
     # almacenamiento de errores sintacticos
 
-import ply.yacc as yacc
+import Analizador.Gramatica.ply.yacc as yacc
 parser = yacc.yacc()
 
-f = open("./entrada.txt", "r")
+f = open("entrada.txt", "r")
 input = f.read()
 print(input)
 parser.parse(input)
