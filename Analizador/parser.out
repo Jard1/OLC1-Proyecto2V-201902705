@@ -1,0 +1,779 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    ID
+    TKN_AND
+    TKN_BOOLEAN
+    TKN_BREAK
+    TKN_CASE
+    TKN_CHAR
+    TKN_COMA
+    TKN_CONTINUE
+    TKN_CORCHETEDER
+    TKN_CORCHETEIZQ
+    TKN_DECREMENTO
+    TKN_DEFAULT
+    TKN_DIFERENTE
+    TKN_DOSPUNTOS
+    TKN_DOUBLE
+    TKN_ELSE
+    TKN_FALSE
+    TKN_FOR
+    TKN_IF
+    TKN_IGUAL
+    TKN_IGUAL_IGUAL
+    TKN_INCREMENTO
+    TKN_INT
+    TKN_LENGTH
+    TKN_LLAVEDER
+    TKN_LLAVEIZQ
+    TKN_MAIN
+    TKN_MAYOR
+    TKN_MAYORI
+    TKN_MENOR
+    TKN_MENORI
+    TKN_MOD
+    TKN_NEW
+    TKN_NOT
+    TKN_NULL
+    TKN_OR
+    TKN_POTENCIA
+    TKN_PUNTO
+    TKN_READ
+    TKN_RETURN
+    TKN_ROUND
+    TKN_STRING
+    TKN_SWITCH
+    TKN_TOLOWER
+    TKN_TO_UPPER
+    TKN_TRUE
+    TKN_TRUNCATE
+    TKN_TYPE_OF
+    TKN_VOID
+    TKN_WHILE
+
+Grammar
+
+Rule 0     S' -> s
+Rule 1     s -> instrucciones
+Rule 2     instrucciones -> instrucciones instruccion
+Rule 3     instrucciones -> instruccion
+Rule 4     finalizacion -> TKN_PTCOMA
+Rule 5     finalizacion -> <empty>
+Rule 6     instruccion -> instPrint finalizacion
+Rule 7     instruccion -> expresion finalizacion
+Rule 8     instPrint -> TKN_PRINT TKN_PARIZQ expresion TKN_PARDER
+Rule 9     expresion -> expresion TKN_MAS expresion
+Rule 10    expresion -> expresion TKN_MENOS expresion
+Rule 11    expresion -> expresion TKN_POR expresion
+Rule 12    expresion -> expresion TKN_DIV expresion
+Rule 13    expresion -> TKN_MENOS expresion
+Rule 14    expresion -> TKN_PARIZQ expresion TKN_PARDER
+Rule 15    expresion -> ENTERO
+Rule 16    expresion -> DECIMAL
+Rule 17    expresion -> CADENA
+Rule 18    instruccion -> error TKN_PTCOMA
+
+Terminals, with rules where they appear
+
+CADENA               : 17
+DECIMAL              : 16
+ENTERO               : 15
+ID                   : 
+TKN_AND              : 
+TKN_BOOLEAN          : 
+TKN_BREAK            : 
+TKN_CASE             : 
+TKN_CHAR             : 
+TKN_COMA             : 
+TKN_CONTINUE         : 
+TKN_CORCHETEDER      : 
+TKN_CORCHETEIZQ      : 
+TKN_DECREMENTO       : 
+TKN_DEFAULT          : 
+TKN_DIFERENTE        : 
+TKN_DIV              : 12
+TKN_DOSPUNTOS        : 
+TKN_DOUBLE           : 
+TKN_ELSE             : 
+TKN_FALSE            : 
+TKN_FOR              : 
+TKN_IF               : 
+TKN_IGUAL            : 
+TKN_IGUAL_IGUAL      : 
+TKN_INCREMENTO       : 
+TKN_INT              : 
+TKN_LENGTH           : 
+TKN_LLAVEDER         : 
+TKN_LLAVEIZQ         : 
+TKN_MAIN             : 
+TKN_MAS              : 9
+TKN_MAYOR            : 
+TKN_MAYORI           : 
+TKN_MENOR            : 
+TKN_MENORI           : 
+TKN_MENOS            : 10 13
+TKN_MOD              : 
+TKN_NEW              : 
+TKN_NOT              : 
+TKN_NULL             : 
+TKN_OR               : 
+TKN_PARDER           : 8 14
+TKN_PARIZQ           : 8 14
+TKN_POR              : 11
+TKN_POTENCIA         : 
+TKN_PRINT            : 8
+TKN_PTCOMA           : 4 18
+TKN_PUNTO            : 
+TKN_READ             : 
+TKN_RETURN           : 
+TKN_ROUND            : 
+TKN_STRING           : 
+TKN_SWITCH           : 
+TKN_TOLOWER          : 
+TKN_TO_UPPER         : 
+TKN_TRUE             : 
+TKN_TRUNCATE         : 
+TKN_TYPE_OF          : 
+TKN_VOID             : 
+TKN_WHILE            : 
+error                : 18
+
+Nonterminals, with rules where they appear
+
+expresion            : 7 8 9 9 10 10 11 11 12 12 13 14
+finalizacion         : 6 7
+instPrint            : 6
+instruccion          : 2 3
+instrucciones        : 1 2
+s                    : 0
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . s
+    (1) s -> . instrucciones
+    (2) instrucciones -> . instrucciones instruccion
+    (3) instrucciones -> . instruccion
+    (6) instruccion -> . instPrint finalizacion
+    (7) instruccion -> . expresion finalizacion
+    (18) instruccion -> . error TKN_PTCOMA
+    (8) instPrint -> . TKN_PRINT TKN_PARIZQ expresion TKN_PARDER
+    (9) expresion -> . expresion TKN_MAS expresion
+    (10) expresion -> . expresion TKN_MENOS expresion
+    (11) expresion -> . expresion TKN_POR expresion
+    (12) expresion -> . expresion TKN_DIV expresion
+    (13) expresion -> . TKN_MENOS expresion
+    (14) expresion -> . TKN_PARIZQ expresion TKN_PARDER
+    (15) expresion -> . ENTERO
+    (16) expresion -> . DECIMAL
+    (17) expresion -> . CADENA
+
+    error           shift and go to state 6
+    TKN_PRINT       shift and go to state 7
+    TKN_MENOS       shift and go to state 9
+    TKN_PARIZQ      shift and go to state 8
+    ENTERO          shift and go to state 10
+    DECIMAL         shift and go to state 11
+    CADENA          shift and go to state 12
+
+    s                              shift and go to state 1
+    instrucciones                  shift and go to state 2
+    instruccion                    shift and go to state 3
+    instPrint                      shift and go to state 4
+    expresion                      shift and go to state 5
+
+state 1
+
+    (0) S' -> s .
+
+
+
+state 2
+
+    (1) s -> instrucciones .
+    (2) instrucciones -> instrucciones . instruccion
+    (6) instruccion -> . instPrint finalizacion
+    (7) instruccion -> . expresion finalizacion
+    (18) instruccion -> . error TKN_PTCOMA
+    (8) instPrint -> . TKN_PRINT TKN_PARIZQ expresion TKN_PARDER
+    (9) expresion -> . expresion TKN_MAS expresion
+    (10) expresion -> . expresion TKN_MENOS expresion
+    (11) expresion -> . expresion TKN_POR expresion
+    (12) expresion -> . expresion TKN_DIV expresion
+    (13) expresion -> . TKN_MENOS expresion
+    (14) expresion -> . TKN_PARIZQ expresion TKN_PARDER
+    (15) expresion -> . ENTERO
+    (16) expresion -> . DECIMAL
+    (17) expresion -> . CADENA
+
+    $end            reduce using rule 1 (s -> instrucciones .)
+    error           shift and go to state 6
+    TKN_PRINT       shift and go to state 7
+    TKN_MENOS       shift and go to state 9
+    TKN_PARIZQ      shift and go to state 8
+    ENTERO          shift and go to state 10
+    DECIMAL         shift and go to state 11
+    CADENA          shift and go to state 12
+
+    instruccion                    shift and go to state 13
+    instPrint                      shift and go to state 4
+    expresion                      shift and go to state 5
+
+state 3
+
+    (3) instrucciones -> instruccion .
+
+    error           reduce using rule 3 (instrucciones -> instruccion .)
+    TKN_PRINT       reduce using rule 3 (instrucciones -> instruccion .)
+    TKN_MENOS       reduce using rule 3 (instrucciones -> instruccion .)
+    TKN_PARIZQ      reduce using rule 3 (instrucciones -> instruccion .)
+    ENTERO          reduce using rule 3 (instrucciones -> instruccion .)
+    DECIMAL         reduce using rule 3 (instrucciones -> instruccion .)
+    CADENA          reduce using rule 3 (instrucciones -> instruccion .)
+    $end            reduce using rule 3 (instrucciones -> instruccion .)
+
+
+state 4
+
+    (6) instruccion -> instPrint . finalizacion
+    (4) finalizacion -> . TKN_PTCOMA
+    (5) finalizacion -> .
+
+    TKN_PTCOMA      shift and go to state 15
+    error           reduce using rule 5 (finalizacion -> .)
+    TKN_PRINT       reduce using rule 5 (finalizacion -> .)
+    TKN_MENOS       reduce using rule 5 (finalizacion -> .)
+    TKN_PARIZQ      reduce using rule 5 (finalizacion -> .)
+    ENTERO          reduce using rule 5 (finalizacion -> .)
+    DECIMAL         reduce using rule 5 (finalizacion -> .)
+    CADENA          reduce using rule 5 (finalizacion -> .)
+    $end            reduce using rule 5 (finalizacion -> .)
+
+    finalizacion                   shift and go to state 14
+
+state 5
+
+    (7) instruccion -> expresion . finalizacion
+    (9) expresion -> expresion . TKN_MAS expresion
+    (10) expresion -> expresion . TKN_MENOS expresion
+    (11) expresion -> expresion . TKN_POR expresion
+    (12) expresion -> expresion . TKN_DIV expresion
+    (4) finalizacion -> . TKN_PTCOMA
+    (5) finalizacion -> .
+
+  ! shift/reduce conflict for TKN_MENOS resolved as shift
+    TKN_MAS         shift and go to state 17
+    TKN_MENOS       shift and go to state 18
+    TKN_POR         shift and go to state 19
+    TKN_DIV         shift and go to state 20
+    TKN_PTCOMA      shift and go to state 15
+    error           reduce using rule 5 (finalizacion -> .)
+    TKN_PRINT       reduce using rule 5 (finalizacion -> .)
+    TKN_PARIZQ      reduce using rule 5 (finalizacion -> .)
+    ENTERO          reduce using rule 5 (finalizacion -> .)
+    DECIMAL         reduce using rule 5 (finalizacion -> .)
+    CADENA          reduce using rule 5 (finalizacion -> .)
+    $end            reduce using rule 5 (finalizacion -> .)
+
+  ! TKN_MENOS       [ reduce using rule 5 (finalizacion -> .) ]
+
+    finalizacion                   shift and go to state 16
+
+state 6
+
+    (18) instruccion -> error . TKN_PTCOMA
+
+    TKN_PTCOMA      shift and go to state 21
+
+
+state 7
+
+    (8) instPrint -> TKN_PRINT . TKN_PARIZQ expresion TKN_PARDER
+
+    TKN_PARIZQ      shift and go to state 22
+
+
+state 8
+
+    (14) expresion -> TKN_PARIZQ . expresion TKN_PARDER
+    (9) expresion -> . expresion TKN_MAS expresion
+    (10) expresion -> . expresion TKN_MENOS expresion
+    (11) expresion -> . expresion TKN_POR expresion
+    (12) expresion -> . expresion TKN_DIV expresion
+    (13) expresion -> . TKN_MENOS expresion
+    (14) expresion -> . TKN_PARIZQ expresion TKN_PARDER
+    (15) expresion -> . ENTERO
+    (16) expresion -> . DECIMAL
+    (17) expresion -> . CADENA
+
+    TKN_MENOS       shift and go to state 9
+    TKN_PARIZQ      shift and go to state 8
+    ENTERO          shift and go to state 10
+    DECIMAL         shift and go to state 11
+    CADENA          shift and go to state 12
+
+    expresion                      shift and go to state 23
+
+state 9
+
+    (13) expresion -> TKN_MENOS . expresion
+    (9) expresion -> . expresion TKN_MAS expresion
+    (10) expresion -> . expresion TKN_MENOS expresion
+    (11) expresion -> . expresion TKN_POR expresion
+    (12) expresion -> . expresion TKN_DIV expresion
+    (13) expresion -> . TKN_MENOS expresion
+    (14) expresion -> . TKN_PARIZQ expresion TKN_PARDER
+    (15) expresion -> . ENTERO
+    (16) expresion -> . DECIMAL
+    (17) expresion -> . CADENA
+
+    TKN_MENOS       shift and go to state 9
+    TKN_PARIZQ      shift and go to state 8
+    ENTERO          shift and go to state 10
+    DECIMAL         shift and go to state 11
+    CADENA          shift and go to state 12
+
+    expresion                      shift and go to state 24
+
+state 10
+
+    (15) expresion -> ENTERO .
+
+    TKN_MAS         reduce using rule 15 (expresion -> ENTERO .)
+    TKN_MENOS       reduce using rule 15 (expresion -> ENTERO .)
+    TKN_POR         reduce using rule 15 (expresion -> ENTERO .)
+    TKN_DIV         reduce using rule 15 (expresion -> ENTERO .)
+    TKN_PTCOMA      reduce using rule 15 (expresion -> ENTERO .)
+    error           reduce using rule 15 (expresion -> ENTERO .)
+    TKN_PRINT       reduce using rule 15 (expresion -> ENTERO .)
+    TKN_PARIZQ      reduce using rule 15 (expresion -> ENTERO .)
+    ENTERO          reduce using rule 15 (expresion -> ENTERO .)
+    DECIMAL         reduce using rule 15 (expresion -> ENTERO .)
+    CADENA          reduce using rule 15 (expresion -> ENTERO .)
+    $end            reduce using rule 15 (expresion -> ENTERO .)
+    TKN_PARDER      reduce using rule 15 (expresion -> ENTERO .)
+
+
+state 11
+
+    (16) expresion -> DECIMAL .
+
+    TKN_MAS         reduce using rule 16 (expresion -> DECIMAL .)
+    TKN_MENOS       reduce using rule 16 (expresion -> DECIMAL .)
+    TKN_POR         reduce using rule 16 (expresion -> DECIMAL .)
+    TKN_DIV         reduce using rule 16 (expresion -> DECIMAL .)
+    TKN_PTCOMA      reduce using rule 16 (expresion -> DECIMAL .)
+    error           reduce using rule 16 (expresion -> DECIMAL .)
+    TKN_PRINT       reduce using rule 16 (expresion -> DECIMAL .)
+    TKN_PARIZQ      reduce using rule 16 (expresion -> DECIMAL .)
+    ENTERO          reduce using rule 16 (expresion -> DECIMAL .)
+    DECIMAL         reduce using rule 16 (expresion -> DECIMAL .)
+    CADENA          reduce using rule 16 (expresion -> DECIMAL .)
+    $end            reduce using rule 16 (expresion -> DECIMAL .)
+    TKN_PARDER      reduce using rule 16 (expresion -> DECIMAL .)
+
+
+state 12
+
+    (17) expresion -> CADENA .
+
+    TKN_MAS         reduce using rule 17 (expresion -> CADENA .)
+    TKN_MENOS       reduce using rule 17 (expresion -> CADENA .)
+    TKN_POR         reduce using rule 17 (expresion -> CADENA .)
+    TKN_DIV         reduce using rule 17 (expresion -> CADENA .)
+    TKN_PTCOMA      reduce using rule 17 (expresion -> CADENA .)
+    error           reduce using rule 17 (expresion -> CADENA .)
+    TKN_PRINT       reduce using rule 17 (expresion -> CADENA .)
+    TKN_PARIZQ      reduce using rule 17 (expresion -> CADENA .)
+    ENTERO          reduce using rule 17 (expresion -> CADENA .)
+    DECIMAL         reduce using rule 17 (expresion -> CADENA .)
+    CADENA          reduce using rule 17 (expresion -> CADENA .)
+    $end            reduce using rule 17 (expresion -> CADENA .)
+    TKN_PARDER      reduce using rule 17 (expresion -> CADENA .)
+
+
+state 13
+
+    (2) instrucciones -> instrucciones instruccion .
+
+    error           reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+    TKN_PRINT       reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+    TKN_MENOS       reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+    TKN_PARIZQ      reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+    ENTERO          reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+    DECIMAL         reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+    CADENA          reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+    $end            reduce using rule 2 (instrucciones -> instrucciones instruccion .)
+
+
+state 14
+
+    (6) instruccion -> instPrint finalizacion .
+
+    error           reduce using rule 6 (instruccion -> instPrint finalizacion .)
+    TKN_PRINT       reduce using rule 6 (instruccion -> instPrint finalizacion .)
+    TKN_MENOS       reduce using rule 6 (instruccion -> instPrint finalizacion .)
+    TKN_PARIZQ      reduce using rule 6 (instruccion -> instPrint finalizacion .)
+    ENTERO          reduce using rule 6 (instruccion -> instPrint finalizacion .)
+    DECIMAL         reduce using rule 6 (instruccion -> instPrint finalizacion .)
+    CADENA          reduce using rule 6 (instruccion -> instPrint finalizacion .)
+    $end            reduce using rule 6 (instruccion -> instPrint finalizacion .)
+
+
+state 15
+
+    (4) finalizacion -> TKN_PTCOMA .
+
+    error           reduce using rule 4 (finalizacion -> TKN_PTCOMA .)
+    TKN_PRINT       reduce using rule 4 (finalizacion -> TKN_PTCOMA .)
+    TKN_MENOS       reduce using rule 4 (finalizacion -> TKN_PTCOMA .)
+    TKN_PARIZQ      reduce using rule 4 (finalizacion -> TKN_PTCOMA .)
+    ENTERO          reduce using rule 4 (finalizacion -> TKN_PTCOMA .)
+    DECIMAL         reduce using rule 4 (finalizacion -> TKN_PTCOMA .)
+    CADENA          reduce using rule 4 (finalizacion -> TKN_PTCOMA .)
+    $end            reduce using rule 4 (finalizacion -> TKN_PTCOMA .)
+
+
+state 16
+
+    (7) instruccion -> expresion finalizacion .
+
+    error           reduce using rule 7 (instruccion -> expresion finalizacion .)
+    TKN_PRINT       reduce using rule 7 (instruccion -> expresion finalizacion .)
+    TKN_MENOS       reduce using rule 7 (instruccion -> expresion finalizacion .)
+    TKN_PARIZQ      reduce using rule 7 (instruccion -> expresion finalizacion .)
+    ENTERO          reduce using rule 7 (instruccion -> expresion finalizacion .)
+    DECIMAL         reduce using rule 7 (instruccion -> expresion finalizacion .)
+    CADENA          reduce using rule 7 (instruccion -> expresion finalizacion .)
+    $end            reduce using rule 7 (instruccion -> expresion finalizacion .)
+
+
+state 17
+
+    (9) expresion -> expresion TKN_MAS . expresion
+    (9) expresion -> . expresion TKN_MAS expresion
+    (10) expresion -> . expresion TKN_MENOS expresion
+    (11) expresion -> . expresion TKN_POR expresion
+    (12) expresion -> . expresion TKN_DIV expresion
+    (13) expresion -> . TKN_MENOS expresion
+    (14) expresion -> . TKN_PARIZQ expresion TKN_PARDER
+    (15) expresion -> . ENTERO
+    (16) expresion -> . DECIMAL
+    (17) expresion -> . CADENA
+
+    TKN_MENOS       shift and go to state 9
+    TKN_PARIZQ      shift and go to state 8
+    ENTERO          shift and go to state 10
+    DECIMAL         shift and go to state 11
+    CADENA          shift and go to state 12
+
+    expresion                      shift and go to state 25
+
+state 18
+
+    (10) expresion -> expresion TKN_MENOS . expresion
+    (9) expresion -> . expresion TKN_MAS expresion
+    (10) expresion -> . expresion TKN_MENOS expresion
+    (11) expresion -> . expresion TKN_POR expresion
+    (12) expresion -> . expresion TKN_DIV expresion
+    (13) expresion -> . TKN_MENOS expresion
+    (14) expresion -> . TKN_PARIZQ expresion TKN_PARDER
+    (15) expresion -> . ENTERO
+    (16) expresion -> . DECIMAL
+    (17) expresion -> . CADENA
+
+    TKN_MENOS       shift and go to state 9
+    TKN_PARIZQ      shift and go to state 8
+    ENTERO          shift and go to state 10
+    DECIMAL         shift and go to state 11
+    CADENA          shift and go to state 12
+
+    expresion                      shift and go to state 26
+
+state 19
+
+    (11) expresion -> expresion TKN_POR . expresion
+    (9) expresion -> . expresion TKN_MAS expresion
+    (10) expresion -> . expresion TKN_MENOS expresion
+    (11) expresion -> . expresion TKN_POR expresion
+    (12) expresion -> . expresion TKN_DIV expresion
+    (13) expresion -> . TKN_MENOS expresion
+    (14) expresion -> . TKN_PARIZQ expresion TKN_PARDER
+    (15) expresion -> . ENTERO
+    (16) expresion -> . DECIMAL
+    (17) expresion -> . CADENA
+
+    TKN_MENOS       shift and go to state 9
+    TKN_PARIZQ      shift and go to state 8
+    ENTERO          shift and go to state 10
+    DECIMAL         shift and go to state 11
+    CADENA          shift and go to state 12
+
+    expresion                      shift and go to state 27
+
+state 20
+
+    (12) expresion -> expresion TKN_DIV . expresion
+    (9) expresion -> . expresion TKN_MAS expresion
+    (10) expresion -> . expresion TKN_MENOS expresion
+    (11) expresion -> . expresion TKN_POR expresion
+    (12) expresion -> . expresion TKN_DIV expresion
+    (13) expresion -> . TKN_MENOS expresion
+    (14) expresion -> . TKN_PARIZQ expresion TKN_PARDER
+    (15) expresion -> . ENTERO
+    (16) expresion -> . DECIMAL
+    (17) expresion -> . CADENA
+
+    TKN_MENOS       shift and go to state 9
+    TKN_PARIZQ      shift and go to state 8
+    ENTERO          shift and go to state 10
+    DECIMAL         shift and go to state 11
+    CADENA          shift and go to state 12
+
+    expresion                      shift and go to state 28
+
+state 21
+
+    (18) instruccion -> error TKN_PTCOMA .
+
+    error           reduce using rule 18 (instruccion -> error TKN_PTCOMA .)
+    TKN_PRINT       reduce using rule 18 (instruccion -> error TKN_PTCOMA .)
+    TKN_MENOS       reduce using rule 18 (instruccion -> error TKN_PTCOMA .)
+    TKN_PARIZQ      reduce using rule 18 (instruccion -> error TKN_PTCOMA .)
+    ENTERO          reduce using rule 18 (instruccion -> error TKN_PTCOMA .)
+    DECIMAL         reduce using rule 18 (instruccion -> error TKN_PTCOMA .)
+    CADENA          reduce using rule 18 (instruccion -> error TKN_PTCOMA .)
+    $end            reduce using rule 18 (instruccion -> error TKN_PTCOMA .)
+
+
+state 22
+
+    (8) instPrint -> TKN_PRINT TKN_PARIZQ . expresion TKN_PARDER
+    (9) expresion -> . expresion TKN_MAS expresion
+    (10) expresion -> . expresion TKN_MENOS expresion
+    (11) expresion -> . expresion TKN_POR expresion
+    (12) expresion -> . expresion TKN_DIV expresion
+    (13) expresion -> . TKN_MENOS expresion
+    (14) expresion -> . TKN_PARIZQ expresion TKN_PARDER
+    (15) expresion -> . ENTERO
+    (16) expresion -> . DECIMAL
+    (17) expresion -> . CADENA
+
+    TKN_MENOS       shift and go to state 9
+    TKN_PARIZQ      shift and go to state 8
+    ENTERO          shift and go to state 10
+    DECIMAL         shift and go to state 11
+    CADENA          shift and go to state 12
+
+    expresion                      shift and go to state 29
+
+state 23
+
+    (14) expresion -> TKN_PARIZQ expresion . TKN_PARDER
+    (9) expresion -> expresion . TKN_MAS expresion
+    (10) expresion -> expresion . TKN_MENOS expresion
+    (11) expresion -> expresion . TKN_POR expresion
+    (12) expresion -> expresion . TKN_DIV expresion
+
+    TKN_PARDER      shift and go to state 30
+    TKN_MAS         shift and go to state 17
+    TKN_MENOS       shift and go to state 18
+    TKN_POR         shift and go to state 19
+    TKN_DIV         shift and go to state 20
+
+
+state 24
+
+    (13) expresion -> TKN_MENOS expresion .
+    (9) expresion -> expresion . TKN_MAS expresion
+    (10) expresion -> expresion . TKN_MENOS expresion
+    (11) expresion -> expresion . TKN_POR expresion
+    (12) expresion -> expresion . TKN_DIV expresion
+
+    TKN_MAS         reduce using rule 13 (expresion -> TKN_MENOS expresion .)
+    TKN_MENOS       reduce using rule 13 (expresion -> TKN_MENOS expresion .)
+    TKN_POR         reduce using rule 13 (expresion -> TKN_MENOS expresion .)
+    TKN_DIV         reduce using rule 13 (expresion -> TKN_MENOS expresion .)
+    TKN_PTCOMA      reduce using rule 13 (expresion -> TKN_MENOS expresion .)
+    error           reduce using rule 13 (expresion -> TKN_MENOS expresion .)
+    TKN_PRINT       reduce using rule 13 (expresion -> TKN_MENOS expresion .)
+    TKN_PARIZQ      reduce using rule 13 (expresion -> TKN_MENOS expresion .)
+    ENTERO          reduce using rule 13 (expresion -> TKN_MENOS expresion .)
+    DECIMAL         reduce using rule 13 (expresion -> TKN_MENOS expresion .)
+    CADENA          reduce using rule 13 (expresion -> TKN_MENOS expresion .)
+    $end            reduce using rule 13 (expresion -> TKN_MENOS expresion .)
+    TKN_PARDER      reduce using rule 13 (expresion -> TKN_MENOS expresion .)
+
+  ! TKN_MAS         [ shift and go to state 17 ]
+  ! TKN_MENOS       [ shift and go to state 18 ]
+  ! TKN_POR         [ shift and go to state 19 ]
+  ! TKN_DIV         [ shift and go to state 20 ]
+
+
+state 25
+
+    (9) expresion -> expresion TKN_MAS expresion .
+    (9) expresion -> expresion . TKN_MAS expresion
+    (10) expresion -> expresion . TKN_MENOS expresion
+    (11) expresion -> expresion . TKN_POR expresion
+    (12) expresion -> expresion . TKN_DIV expresion
+
+    TKN_MAS         reduce using rule 9 (expresion -> expresion TKN_MAS expresion .)
+    TKN_MENOS       reduce using rule 9 (expresion -> expresion TKN_MAS expresion .)
+    TKN_PTCOMA      reduce using rule 9 (expresion -> expresion TKN_MAS expresion .)
+    error           reduce using rule 9 (expresion -> expresion TKN_MAS expresion .)
+    TKN_PRINT       reduce using rule 9 (expresion -> expresion TKN_MAS expresion .)
+    TKN_PARIZQ      reduce using rule 9 (expresion -> expresion TKN_MAS expresion .)
+    ENTERO          reduce using rule 9 (expresion -> expresion TKN_MAS expresion .)
+    DECIMAL         reduce using rule 9 (expresion -> expresion TKN_MAS expresion .)
+    CADENA          reduce using rule 9 (expresion -> expresion TKN_MAS expresion .)
+    $end            reduce using rule 9 (expresion -> expresion TKN_MAS expresion .)
+    TKN_PARDER      reduce using rule 9 (expresion -> expresion TKN_MAS expresion .)
+    TKN_POR         shift and go to state 19
+    TKN_DIV         shift and go to state 20
+
+  ! TKN_POR         [ reduce using rule 9 (expresion -> expresion TKN_MAS expresion .) ]
+  ! TKN_DIV         [ reduce using rule 9 (expresion -> expresion TKN_MAS expresion .) ]
+  ! TKN_MAS         [ shift and go to state 17 ]
+  ! TKN_MENOS       [ shift and go to state 18 ]
+
+
+state 26
+
+    (10) expresion -> expresion TKN_MENOS expresion .
+    (9) expresion -> expresion . TKN_MAS expresion
+    (10) expresion -> expresion . TKN_MENOS expresion
+    (11) expresion -> expresion . TKN_POR expresion
+    (12) expresion -> expresion . TKN_DIV expresion
+
+    TKN_MAS         reduce using rule 10 (expresion -> expresion TKN_MENOS expresion .)
+    TKN_MENOS       reduce using rule 10 (expresion -> expresion TKN_MENOS expresion .)
+    TKN_PTCOMA      reduce using rule 10 (expresion -> expresion TKN_MENOS expresion .)
+    error           reduce using rule 10 (expresion -> expresion TKN_MENOS expresion .)
+    TKN_PRINT       reduce using rule 10 (expresion -> expresion TKN_MENOS expresion .)
+    TKN_PARIZQ      reduce using rule 10 (expresion -> expresion TKN_MENOS expresion .)
+    ENTERO          reduce using rule 10 (expresion -> expresion TKN_MENOS expresion .)
+    DECIMAL         reduce using rule 10 (expresion -> expresion TKN_MENOS expresion .)
+    CADENA          reduce using rule 10 (expresion -> expresion TKN_MENOS expresion .)
+    $end            reduce using rule 10 (expresion -> expresion TKN_MENOS expresion .)
+    TKN_PARDER      reduce using rule 10 (expresion -> expresion TKN_MENOS expresion .)
+    TKN_POR         shift and go to state 19
+    TKN_DIV         shift and go to state 20
+
+  ! TKN_POR         [ reduce using rule 10 (expresion -> expresion TKN_MENOS expresion .) ]
+  ! TKN_DIV         [ reduce using rule 10 (expresion -> expresion TKN_MENOS expresion .) ]
+  ! TKN_MAS         [ shift and go to state 17 ]
+  ! TKN_MENOS       [ shift and go to state 18 ]
+
+
+state 27
+
+    (11) expresion -> expresion TKN_POR expresion .
+    (9) expresion -> expresion . TKN_MAS expresion
+    (10) expresion -> expresion . TKN_MENOS expresion
+    (11) expresion -> expresion . TKN_POR expresion
+    (12) expresion -> expresion . TKN_DIV expresion
+
+    TKN_MAS         reduce using rule 11 (expresion -> expresion TKN_POR expresion .)
+    TKN_MENOS       reduce using rule 11 (expresion -> expresion TKN_POR expresion .)
+    TKN_POR         reduce using rule 11 (expresion -> expresion TKN_POR expresion .)
+    TKN_DIV         reduce using rule 11 (expresion -> expresion TKN_POR expresion .)
+    TKN_PTCOMA      reduce using rule 11 (expresion -> expresion TKN_POR expresion .)
+    error           reduce using rule 11 (expresion -> expresion TKN_POR expresion .)
+    TKN_PRINT       reduce using rule 11 (expresion -> expresion TKN_POR expresion .)
+    TKN_PARIZQ      reduce using rule 11 (expresion -> expresion TKN_POR expresion .)
+    ENTERO          reduce using rule 11 (expresion -> expresion TKN_POR expresion .)
+    DECIMAL         reduce using rule 11 (expresion -> expresion TKN_POR expresion .)
+    CADENA          reduce using rule 11 (expresion -> expresion TKN_POR expresion .)
+    $end            reduce using rule 11 (expresion -> expresion TKN_POR expresion .)
+    TKN_PARDER      reduce using rule 11 (expresion -> expresion TKN_POR expresion .)
+
+  ! TKN_MAS         [ shift and go to state 17 ]
+  ! TKN_MENOS       [ shift and go to state 18 ]
+  ! TKN_POR         [ shift and go to state 19 ]
+  ! TKN_DIV         [ shift and go to state 20 ]
+
+
+state 28
+
+    (12) expresion -> expresion TKN_DIV expresion .
+    (9) expresion -> expresion . TKN_MAS expresion
+    (10) expresion -> expresion . TKN_MENOS expresion
+    (11) expresion -> expresion . TKN_POR expresion
+    (12) expresion -> expresion . TKN_DIV expresion
+
+    TKN_MAS         reduce using rule 12 (expresion -> expresion TKN_DIV expresion .)
+    TKN_MENOS       reduce using rule 12 (expresion -> expresion TKN_DIV expresion .)
+    TKN_POR         reduce using rule 12 (expresion -> expresion TKN_DIV expresion .)
+    TKN_DIV         reduce using rule 12 (expresion -> expresion TKN_DIV expresion .)
+    TKN_PTCOMA      reduce using rule 12 (expresion -> expresion TKN_DIV expresion .)
+    error           reduce using rule 12 (expresion -> expresion TKN_DIV expresion .)
+    TKN_PRINT       reduce using rule 12 (expresion -> expresion TKN_DIV expresion .)
+    TKN_PARIZQ      reduce using rule 12 (expresion -> expresion TKN_DIV expresion .)
+    ENTERO          reduce using rule 12 (expresion -> expresion TKN_DIV expresion .)
+    DECIMAL         reduce using rule 12 (expresion -> expresion TKN_DIV expresion .)
+    CADENA          reduce using rule 12 (expresion -> expresion TKN_DIV expresion .)
+    $end            reduce using rule 12 (expresion -> expresion TKN_DIV expresion .)
+    TKN_PARDER      reduce using rule 12 (expresion -> expresion TKN_DIV expresion .)
+
+  ! TKN_MAS         [ shift and go to state 17 ]
+  ! TKN_MENOS       [ shift and go to state 18 ]
+  ! TKN_POR         [ shift and go to state 19 ]
+  ! TKN_DIV         [ shift and go to state 20 ]
+
+
+state 29
+
+    (8) instPrint -> TKN_PRINT TKN_PARIZQ expresion . TKN_PARDER
+    (9) expresion -> expresion . TKN_MAS expresion
+    (10) expresion -> expresion . TKN_MENOS expresion
+    (11) expresion -> expresion . TKN_POR expresion
+    (12) expresion -> expresion . TKN_DIV expresion
+
+    TKN_PARDER      shift and go to state 31
+    TKN_MAS         shift and go to state 17
+    TKN_MENOS       shift and go to state 18
+    TKN_POR         shift and go to state 19
+    TKN_DIV         shift and go to state 20
+
+
+state 30
+
+    (14) expresion -> TKN_PARIZQ expresion TKN_PARDER .
+
+    TKN_MAS         reduce using rule 14 (expresion -> TKN_PARIZQ expresion TKN_PARDER .)
+    TKN_MENOS       reduce using rule 14 (expresion -> TKN_PARIZQ expresion TKN_PARDER .)
+    TKN_POR         reduce using rule 14 (expresion -> TKN_PARIZQ expresion TKN_PARDER .)
+    TKN_DIV         reduce using rule 14 (expresion -> TKN_PARIZQ expresion TKN_PARDER .)
+    TKN_PTCOMA      reduce using rule 14 (expresion -> TKN_PARIZQ expresion TKN_PARDER .)
+    error           reduce using rule 14 (expresion -> TKN_PARIZQ expresion TKN_PARDER .)
+    TKN_PRINT       reduce using rule 14 (expresion -> TKN_PARIZQ expresion TKN_PARDER .)
+    TKN_PARIZQ      reduce using rule 14 (expresion -> TKN_PARIZQ expresion TKN_PARDER .)
+    ENTERO          reduce using rule 14 (expresion -> TKN_PARIZQ expresion TKN_PARDER .)
+    DECIMAL         reduce using rule 14 (expresion -> TKN_PARIZQ expresion TKN_PARDER .)
+    CADENA          reduce using rule 14 (expresion -> TKN_PARIZQ expresion TKN_PARDER .)
+    $end            reduce using rule 14 (expresion -> TKN_PARIZQ expresion TKN_PARDER .)
+    TKN_PARDER      reduce using rule 14 (expresion -> TKN_PARIZQ expresion TKN_PARDER .)
+
+
+state 31
+
+    (8) instPrint -> TKN_PRINT TKN_PARIZQ expresion TKN_PARDER .
+
+    TKN_PTCOMA      reduce using rule 8 (instPrint -> TKN_PRINT TKN_PARIZQ expresion TKN_PARDER .)
+    error           reduce using rule 8 (instPrint -> TKN_PRINT TKN_PARIZQ expresion TKN_PARDER .)
+    TKN_PRINT       reduce using rule 8 (instPrint -> TKN_PRINT TKN_PARIZQ expresion TKN_PARDER .)
+    TKN_MENOS       reduce using rule 8 (instPrint -> TKN_PRINT TKN_PARIZQ expresion TKN_PARDER .)
+    TKN_PARIZQ      reduce using rule 8 (instPrint -> TKN_PRINT TKN_PARIZQ expresion TKN_PARDER .)
+    ENTERO          reduce using rule 8 (instPrint -> TKN_PRINT TKN_PARIZQ expresion TKN_PARDER .)
+    DECIMAL         reduce using rule 8 (instPrint -> TKN_PRINT TKN_PARIZQ expresion TKN_PARDER .)
+    CADENA          reduce using rule 8 (instPrint -> TKN_PRINT TKN_PARIZQ expresion TKN_PARDER .)
+    $end            reduce using rule 8 (instPrint -> TKN_PRINT TKN_PARIZQ expresion TKN_PARDER .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for TKN_MENOS in state 5 resolved as shift

@@ -6,10 +6,9 @@ def p_instrucciones(t):
 
 def p_instruccion(t):
     '''
-    instruccion : expresion TKN_PTCOMA
-                | expresion
-                | declararVar TKN_PTCOMA --
-                | declararVar --
+    instruccion : expresion finalizacion
+                | instPrint finalizacion
+                | declararVar finalizacion --
                 | asignacion -- 
                 | instIF  --
                 | instSwitch  --
@@ -17,19 +16,21 @@ def p_instruccion(t):
                 | instWhile  --
                 | instFor  -- 
                 | instMain  --
-                | instPrint  --
     '''
     print('El resultado es: ' + str(t[3]))
 
 def p_expresion(t):
-    '''
+    '''         #binaria    
     expresion   : expresion TKN_MAS expresion
                 | expresion TKN_MENOS expresion
                 | expresion TKN_POR expresion
                 | expresion TKN_DIV expresion
+                
+                #unaria
                 | expresion TKN_POTENCIA expresion
                 | expresion TKN_MOD expresion
 
+                #relacional
                 | expresion TKN_IGUAL_IGUAL expresion
                 | expresion TKN_DIFERENTE expresion
                 | expresion TKN_AND expresion

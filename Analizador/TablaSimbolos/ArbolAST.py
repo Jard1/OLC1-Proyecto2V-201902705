@@ -21,8 +21,8 @@ class Arbol:
     def setExcepciones(self, excepciones):
         self.excepciones = excepciones
 
-    def updateConsola(self,cadena):
-        self.consola += str(cadena) + '\n'
+    def updateConsole(self,cadena):
+        self.consola += str(cadena) + '\n' #agregamos una nueva linea a la consola
 
     def getTSGlobal(self):
         return self.TSglobal

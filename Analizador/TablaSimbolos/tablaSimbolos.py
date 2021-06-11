@@ -1,9 +1,9 @@
-from Analizador.excepcion import Excepcion
+from TablaSimbolos.Excepcion import Excepcion
 
 class TablaSimbolos:
     
     #contructor
-    def __init__(self, anterior = None):
+    def __init__(self, tablaAnterior = None):
         
         self.tablaAnterior = tablaAnterior #la tabla de simbolos anterior (para ver lo de los ambitos)
         
