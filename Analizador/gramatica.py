@@ -1,4 +1,3 @@
-
 #*****************************************************************************************************************
 #                                                       Parte Lexica                                             *
 #*****************************************************************************************************************
@@ -62,7 +61,7 @@ tokens = [
     #**********************Logicos***********************
     'TKN_OR','TKN_AND','TKN_NOT',
 
-    'ENTERO', 'DECIMAL', 'ID', 'CADENA'
+    'ENTERO', 'DECIMAL', 'ID', 'CADENA', 'CHARACTER'
 
 ] + list(tiposDatos.values()) + list(reservadas.values())
 
@@ -102,8 +101,6 @@ t_TKN_OR        = r'\|\|'
 t_TKN_AND       = r'&&'
 t_TKN_NOT       = r'!'
 
-# Caracteres ignorados
-t_ignore = " \t"
 
 def t_DECIMAL(t):
     r'\d+\.\d+'
@@ -136,19 +133,29 @@ def t_CADENA(t):
     t.value = str(t.value).replace('\\n', '\n').replace('\\\"', '\"').replace('\\t', '\t').replace('\\\'', '\'').replace('\\\\', '\\')
     return t
 
+def t_CHARACTER(t):
+    #r'(\".*?\")'
+    r'(\'.\')|(\'\\n\')|(\'\\r\')|(\'\\t\')|(\'\\\"\')|(\'\\\'\')|(\'\\\\\')'
+    t.value = t.value[1:-1] # para quitar las comillas dobles
+    #caracteres especiales
+    return t
 
-# Comentario de una línea
-def t_ComentarioSimple(t):
-    r'\#.*\n'
-    t.lexer.lineno += 1    
 # Comentario de múltiples líneas
 def t_ComentarioMulti(t):
     r'\#\*(.|\n)*?\*\#'
     t.lexer.lineno += t.value.count('\n')
 
+# Comentario de una línea
+def t_ComentarioSimple(t):
+    r'\#.*\n'
+    t.lexer.lineno += 1    
+
+# Caracteres ignorados
+t_ignore = " \t"
+
 def t_newline(t):
     r'\n+'
-    t.lexer.lineno = t.value.count("\n")
+    t.lexer.lineno += t.value.count("\n")
     
 def t_error(t): #LEXICOS
     errores.append(Excepcion("Lexico","Error léxico." + t.value[0] , t.lexer.lineno, get_column(input, t)))
@@ -190,6 +197,10 @@ from TablaSimbolos.instruccionAbstract import Instruccion
 from Instrucciones.imprimir import Imprimir
 from Expresiones.Primitivos import Primitivos
 from TablaSimbolos.tipo import TIPO
+from Expresiones.Aritmetica import Aritmetica
+from Expresiones.Relacional import Relacional
+
+from TablaSimbolos.tipo import OperadorAritmetico, OperadorRelacional
 
 #------------------------------------------Inicio gramatica-----------------------------------------
 def p_s(t):
@@ -237,17 +248,49 @@ def p_expresion_binaria(t):
             | expresion TKN_MENOS expresion
             | expresion TKN_POR expresion
             | expresion TKN_DIV expresion
+            | expresion TKN_POTENCIA expresion
+            | expresion TKN_MOD expresion
+            | expresion TKN_IGUAL_IGUAL expresion
+            | expresion TKN_DIFERENTE expresion
+            | expresion TKN_MENOR expresion
+            | expresion TKN_MAYOR expresion
+            | expresion TKN_MENORI expresion
+            | expresion TKN_MAYORI expresion 
     '''
-    if    t[2] == '+': t[0] = t[1] + t[3]
-    elif  t[2] == '-': t[0] = t[1] - t[3]
-    elif  t[2] == '*': t[0] = t[1] * t[3]
-    elif  t[2] == '/': t[0] = t[1] / t[3]
+    if  t[2] == '+': 
+        t[0] = Aritmetica(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorAritmetico.MAS, t[3])
+    elif  t[2] == '-': 
+        t[0] = Aritmetica(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorAritmetico.MENOS, t[3])
+    elif  t[2] == '*':
+        t[0] = Aritmetica(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorAritmetico.POR, t[3])
+    elif  t[2] == '/': 
+        t[0] = Aritmetica(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorAritmetico.DIV, t[3])
+    elif  t[2] == '**': 
+        t[0] = Aritmetica(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorAritmetico.POTENCIA, t[3])
+    elif  t[2] == '%': 
+        t[0] = Aritmetica(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorAritmetico.MOD, t[3])
+
+
+    elif  t[2] == '==': 
+        t[0] = Relacional(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorRelacional.IGUALIGUAL, t[3])
+    elif  t[2] == '=!': 
+        t[0] = Relacional(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorRelacional.DIFERENTE, t[3])
+    elif  t[2] == '<': 
+        t[0] = Relacional(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorRelacional.MENORQUE, t[3])
+    elif  t[2] == '>': 
+        t[0] = Relacional(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorRelacional.MAYORQUE, t[3])
+    elif  t[2] == '<=': 
+        t[0] = Relacional(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorRelacional.MENORIGUAL, t[3])
+    elif  t[2] == '>=': 
+        t[0] = Relacional(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorRelacional.MAYORIGUAL, t[3])
+
 
 def p_expresion_unaria(t):
     '''
     expresion : TKN_MENOS expresion %prec UMENOS
     '''
-    t[0] = -t[2]
+    #t[0] = -t[2]
+    t[0] = Aritmetica(t.lineno(1), get_column(input, t.slice[1]), t[2], OperadorAritmetico.UMENOS, None)
 
 def p_expresion_agrupacion(t):
     '''
@@ -267,6 +310,16 @@ def p_expresion_DECIMAL(t):
 def p_expresion_CADENA(t):
     '''expresion : CADENA'''
     t[0] = Primitivos(t.lineno(1), get_column(input, t.slice[1]), TIPO.CADENA, t[1])
+
+def p_expresion_CHARACTER(t):
+    '''expresion : CHARACTER'''
+    t[0] = Primitivos(t.lineno(1), get_column(input, t.slice[1]), TIPO.CHARACTER, t[1])
+
+def p_expresion_boolean(t):
+    '''expresion : TKN_FALSE
+                 | TKN_TRUE
+    '''
+    t[0] = Primitivos(t.lineno(1), get_column(input, t.slice[1]), TIPO.BOOLEANO , t[1])
 
 #------------------------------------------Manejo de errores-------------------------------------------
 def p_instruccion_error(t):
@@ -312,14 +365,16 @@ ast = Arbol(instrucciones)
 TSGlobal = TablaSimbolos()
 ast.setTSglobal(TSGlobal)
 
-for error in errores:                   #CAPTURA DE ERRORES LEXICOS Y SINTACTICOS
+#Para mostrar la lista DE ERRORES LEXICOS Y SINTACTICOS
+for error in errores:                   
     ast.getExcepciones().append(error)
-    ast.updateConsola(error.toString())
+    ast.updateConsole(error.toString())
 
-for instruccion in ast.getInstrucciones():      # REALIZAR LAS ACCIONES
+# realizar las instrucciones deseadas, que estan guardadas en el ast
+for instruccion in ast.getInstrucciones():
     value = instruccion.interpretar(ast,TSGlobal)
     if isinstance(value, Excepcion) :
         ast.getExcepciones().append(value)
-        ast.updateConsola(value.toString())
+        ast.updateConsole(value.toString())
 
 print(ast.getConsola())

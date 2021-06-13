@@ -19,12 +19,12 @@ class OperadorAritmetico(Enum):
     UMENOS      = 7
 
 class OperadorRelacional(Enum):
-    MENOR       = 0
-    MAYOR       = 1
-    MENORQUE    = 2
-    MAYORQUE    = 3
-    IGUALIGUAL  = 4
-    DIFERENTE   = 5
+    MENORIGUAL      = 0
+    MAYORIGUAL      = 1
+    MENORQUE        = 2
+    MAYORQUE        = 3
+    IGUALIGUAL      = 4
+    DIFERENTE       = 5
 
 class OperadorLogico(Enum):
     NOT     = 1
