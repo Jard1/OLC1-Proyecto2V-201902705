@@ -183,10 +183,10 @@ precedence = (
     ('left', 'TKN_POR', 'TKN_DIV', 'TKN_MOD'),
     ('left', 'TKN_POTENCIA'),
     ('right', 'UMENOS'),
-    ('left','TKN_IGUAL_IGUAL','TKN_DIFERENTE','TKN_MENOR', 'TKN_MENORI', 'TKN_MAYOR', 'TKN_MAYORI'),
-    ('right', 'TKN_NOT'),
+    ('left', 'TKN_OR'),
     ('left', 'TKN_AND'),
-    ('left', 'TKN_OR')
+    ('right', 'UNOT'),
+    ('left','TKN_IGUAL_IGUAL','TKN_DIFERENTE','TKN_MENOR', 'TKN_MENORI', 'TKN_MAYOR', 'TKN_MAYORI'),
 )
 
 #*****************************************************************************************************************************
@@ -199,8 +199,9 @@ from Expresiones.Primitivos import Primitivos
 from TablaSimbolos.tipo import TIPO
 from Expresiones.Aritmetica import Aritmetica
 from Expresiones.Relacional import Relacional
+from Expresiones.Logica import Logica
 
-from TablaSimbolos.tipo import OperadorAritmetico, OperadorRelacional
+from TablaSimbolos.tipo import OperadorAritmetico, OperadorRelacional, OperadorLogico
 
 #------------------------------------------Inicio gramatica-----------------------------------------
 def p_s(t):
@@ -255,7 +256,9 @@ def p_expresion_binaria(t):
             | expresion TKN_MENOR expresion
             | expresion TKN_MAYOR expresion
             | expresion TKN_MENORI expresion
-            | expresion TKN_MAYORI expresion 
+            | expresion TKN_MAYORI expresion
+            | expresion TKN_OR expresion
+            | expresion TKN_AND expresion
     '''
     if  t[2] == '+': 
         t[0] = Aritmetica(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorAritmetico.MAS, t[3])
@@ -283,8 +286,19 @@ def p_expresion_binaria(t):
         t[0] = Relacional(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorRelacional.MENORIGUAL, t[3])
     elif  t[2] == '>=': 
         t[0] = Relacional(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorRelacional.MAYORIGUAL, t[3])
+    
+    
+    elif  t[2] == '||':
+        t[0] = Logica(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorLogico.OR, t[3])
+    elif  t[2] == '&&':
+        t[0] = Logica(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorLogico.AND, t[3])
 
-
+def p_expresion_not(t):
+    '''
+    expresion : TKN_NOT expresion %prec UNOT
+    '''
+    t[0] = Logica(t.lineno(1), get_column(input, t.slice[1]), t[2], OperadorLogico.NOT, None)
+    
 def p_expresion_unaria(t):
     '''
     expresion : TKN_MENOS expresion %prec UMENOS

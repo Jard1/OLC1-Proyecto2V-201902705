@@ -170,5 +170,9 @@ class Relacional(Instruccion):
         elif tipo == TIPO.DECIMAL:
             return float(val)
         elif tipo == TIPO.BOOLEANO:
-            return self.stringToBool(val)
+            return self.stringToBool(str(val))
         return str(val)
+
+    def stringToBool(self,val):
+        #pasa todo a minustulas y luego mira si la palabra es true
+        return val.lower() in ("true")
