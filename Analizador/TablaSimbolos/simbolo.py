@@ -23,3 +23,9 @@ class Simbolo:
         return self.id
     def setID(self, id):
         self.id = id
+
+    def getFila(self):
+        return self.fila
+    
+    def getColumna(self):
+        return self.columna

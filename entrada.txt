@@ -1,8 +1,6 @@
-
-var variable = 5+5+4+4+4+4*80;
-print(variable);
-var cadena = " hola muncdo\n tkm";
-print(cadena);
-var todos = variable + cadena;
-print(todos);
-var holi;
+var holi = 10;
+print(holi);
+holi = 20;
+print(holi);
+holi = "ho\nli";
+print(holi);

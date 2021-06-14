@@ -1,4 +1,5 @@
 from TablaSimbolos.Excepcion import Excepcion
+from TablaSimbolos.tipo import TIPO
 
 class TablaSimbolos:
     
@@ -44,11 +45,16 @@ class TablaSimbolos:
         while tablaActual != None:
             
             if simbolo.id in self.tabla :
-                #cambiamos por el nuevo valor
-                self.tabla[simbolo.id].setTipo(simbolo.getTipo())
-                self.tabla[simbolo.id].setValor(simbolo.getValor())
-                return "Valor Actualizado"
+                
+                #si es del mismo tipo, o no tiene un tipo definido , o le asignan el valor de null
+                if self.tabla[simbolo.id].getTipo() == simbolo.getTipo() or self.tabla[simbolo.id].getTipo() == TIPO.NULO or simbolo.getTipo() == TIPO.NULO :
+
+                    #cambiamos por el nuevo valor
+                    self.tabla[simbolo.id].setTipo(simbolo.getTipo())
+                    self.tabla[simbolo.id].setValor(simbolo.getValor())
+                    return None
+                return Excepcion ("El valor asignado no es compatible con el tipo de dato de la variable", "Semantico" ,simbolo.getFila(), simbolo.getColumna())
             else:
                 tablaActual = tablaActual.anterior
-        return None
+        return Excepcion ("No se ha declarado la variable que esta asignando","Semantico" ,simbolo.getFila(), simbolo.getColumna())
         

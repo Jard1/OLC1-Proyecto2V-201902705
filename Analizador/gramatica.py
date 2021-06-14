@@ -197,6 +197,7 @@ precedence = (
 from TablaSimbolos.instruccionAbstract import Instruccion
 from Instrucciones.imprimir import Imprimir
 from Instrucciones.Declaracion import Declaracion
+from Instrucciones.Asignacion import Asignacion
 from Expresiones.Primitivos import Primitivos
 from TablaSimbolos.tipo import TIPO
 from Expresiones.Aritmetica import Aritmetica
@@ -344,6 +345,9 @@ def p_expresion_boolean(t):
     '''
     t[0] = Primitivos(t.lineno(1), get_column(input, t.slice[1]), TIPO.BOOLEANO , t[1])
 
+def p_expresion_null(t):
+    '''expresion : TKN_NULL'''
+    t[0] = Primitivos(t.lineno(1), get_column(input, t.slice[1]), TIPO.NULO , t[1])
 #------------------------------------------Manejo de errores-------------------------------------------
 def p_instruccion_error(t):
     'instruccion        : error TKN_PTCOMA'
@@ -364,7 +368,7 @@ def p_declararVarAsignacion(t):
 
 def p_asignacion(t):
     'asignacion : ID TKN_IGUAL expresion'
-    t[0] = Declaracion(t.lineno(1), get_column(input, t.slice[1]),t[2],t[4])
+    t[0] = Asignacion(t.lineno(1), get_column(input, t.slice[1]),t[1],t[3])
 
 
 import ply.yacc as yacc

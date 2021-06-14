@@ -15,8 +15,9 @@ class Declaracion(Instruccion):
     def interpretar(self, tree, table):
         if self.expresion == None:
             #-----------No viene una expresion-----------
-            value = None
-            simbolo = Simbolo(self.fila, self.columna, str(self.identificador), value, None)
+            value = "null"
+            self.tipo = TIPO.NULO
+            simbolo = Simbolo(self.fila, self.columna, str(self.identificador), value, self.tipo)
             result = table.setTabla(simbolo)
 
             if isinstance(result, Excepcion): 
@@ -40,7 +41,10 @@ class Declaracion(Instruccion):
     
     def determinarTipo(self,value):
         
-        if type(value) == int:
+        if value == "null":
+            print("valor nulo")
+            self.tipo = TIPO.NULO
+        elif type(value) == int:
             self.tipo = TIPO.ENTERO
         elif type(value) == float:
             self.tipo = TIPO.DECIMAL
