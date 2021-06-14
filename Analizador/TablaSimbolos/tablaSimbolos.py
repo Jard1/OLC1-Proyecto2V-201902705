@@ -19,9 +19,9 @@ class TablaSimbolos:
 
         #buscamos en todas las tablas enlazadas a la variable
         while tablaActual != None:
-            if id in self.tabla :
+            if id.lower() in self.tabla :
                 #si esta en la tabla, lo retorna
-                return self.tabla[id]
+                return self.tabla[id.lower()]
             else:
                 tablaActual = tablaActual.tablaAnterior
         return None
@@ -44,17 +44,17 @@ class TablaSimbolos:
 
         while tablaActual != None:
             
-            if simbolo.id in self.tabla :
+            if simbolo.id.lower() in self.tabla :
                 
                 #si es del mismo tipo, o no tiene un tipo definido , o le asignan el valor de null
-                if self.tabla[simbolo.id].getTipo() == simbolo.getTipo() or self.tabla[simbolo.id].getTipo() == TIPO.NULO or simbolo.getTipo() == TIPO.NULO :
+                if self.tabla[simbolo.id.lower()].getTipo() == simbolo.getTipo() or self.tabla[simbolo.id.lower()].getTipo() == TIPO.NULO or simbolo.getTipo() == TIPO.NULO :
 
                     #cambiamos por el nuevo valor
-                    self.tabla[simbolo.id].setTipo(simbolo.getTipo())
-                    self.tabla[simbolo.id].setValor(simbolo.getValor())
+                    self.tabla[simbolo.id.lower()].setTipo(simbolo.getTipo())
+                    self.tabla[simbolo.id.lower()].setValor(simbolo.getValor())
                     return None
                 return Excepcion ("El valor asignado no es compatible con el tipo de dato de la variable", "Semantico" ,simbolo.getFila(), simbolo.getColumna())
             else:
-                tablaActual = tablaActual.anterior
+                tablaActual = tablaActual.tablaAnterior
         return Excepcion ("No se ha declarado la variable que esta asignando","Semantico" ,simbolo.getFila(), simbolo.getColumna())
         

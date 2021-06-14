@@ -1,6 +1,1 @@
-var holi = 10;
-print(holi);
-holi = 20;
-print(holi);
-holi = "ho\nli";
-print(holi);
+PriNT(TrUe+fAlSe);

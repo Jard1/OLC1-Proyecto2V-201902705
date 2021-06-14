@@ -172,8 +172,9 @@ def get_column(inp, token):
     return (token.lexpos - line_start) + 1
 
 # Construyendo el analizador lexico
+import re
 import ply.lex as lex
-lexer = lex.lex()
+lexer = lex.lex(reflags= re.IGNORECASE)
 
 
 
@@ -240,6 +241,7 @@ def p_instruccion(t):
                 | expresion finalizacion 
                 | declararVar finalizacion
                 | asignacion finalizacion
+                | instIF
     '''
     t[0] = t[1]
 
@@ -370,6 +372,16 @@ def p_asignacion(t):
     'asignacion : ID TKN_IGUAL expresion'
     t[0] = Asignacion(t.lineno(1), get_column(input, t.slice[1]),t[1],t[3])
 
+#-------------------------------------------------instIF----------------------------------------------------
+
+def p_instIF_simple(t):
+    'instIF : TKN_IF TKN_PARIZQ expresion TKN_PARDER TKN_LLAVEIZQ instrucciones TKN_LLAVEDER'
+
+def p_instIF_else(t):
+    'instIF : TKN_IF TKN_PARIZQ expresion TKN_PARDER TKN_LLAVEIZQ instrucciones TKN_LLAVEDER TKN_ELSE TKN_LLAVEIZQ instrucciones TKN_LLAVEDER'
+
+def p_instIF_elseIF(t):
+    'instIF : TKN_IF TKN_PARIZQ expresion TKN_PARDER TKN_LLAVEIZQ instrucciones TKN_LLAVEDER instIF'
 
 import ply.yacc as yacc
 parser = yacc.yacc()
@@ -400,7 +412,7 @@ entrada = f.read()
 from TablaSimbolos.ArbolAST import Arbol
 from TablaSimbolos.tablaSimbolos import TablaSimbolos
 
-instrucciones = parse(entrada.lower()) #ARBOL AST
+instrucciones = parse(entrada) #ARBOL AST
 ast = Arbol(instrucciones)
 
 TSGlobal = TablaSimbolos()
