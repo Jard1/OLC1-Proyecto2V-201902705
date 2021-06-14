@@ -24,4 +24,5 @@ class Imprimir(Instruccion): #hacemos la herencia
         if self.expresion.tipo == TIPO.ARREGLO:
             return Excepcion("No se puede imprimir un arreglo","Semantico", self.fila, self.columna)
         
-        tree.updateConsole(value) 
+        tree.updateConsole(value)
+        return None 

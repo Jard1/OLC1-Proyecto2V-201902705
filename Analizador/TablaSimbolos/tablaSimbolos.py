@@ -22,18 +22,18 @@ class TablaSimbolos:
                 #si esta en la tabla, lo retorna
                 return self.tabla[id]
             else:
-                tablaActual = tablaActual.anterior
+                tablaActual = tablaActual.tablaAnterior
         return None
 
     #---------------------------------------------Agregar una variable
     def setTabla(self, simbolo):      
        
-        if simbolo.id in self.tabla : 
+        if simbolo.id.lower() in self.tabla : 
             #si el id del simbolo que buscamos, esta en la tabla
             return Excepcion("La variable " + simbolo.id + " ya fue declarada", "Semantico", simbolo.fila, simbolo.columna)
         else:
             #si no lo encuentra, lo agregamos a la tabla
-            self.tabla[simbolo.id] = simbolo
+            self.tabla[simbolo.id.lower()] = simbolo
             return None
 
     #---------------------------------------------Actualizar tabla

@@ -16,6 +16,7 @@ tiposDatos = {
 reservadas = {
     'null' : 'TKN_NULL',
     'new' : 'TKN_NEW',
+    'var' : 'TKN_VAR',
 
     'true' : 'TKN_TRUE',
     'false' : 'TKN_FALSE',
@@ -185,7 +186,7 @@ precedence = (
     ('right', 'UMENOS'),
     ('left', 'TKN_OR'),
     ('left', 'TKN_AND'),
-    ('right', 'UNOT'),
+    ('right', 'UNOT'),   
     ('left','TKN_IGUAL_IGUAL','TKN_DIFERENTE','TKN_MENOR', 'TKN_MENORI', 'TKN_MAYOR', 'TKN_MAYORI'),
 )
 
@@ -195,11 +196,13 @@ precedence = (
 
 from TablaSimbolos.instruccionAbstract import Instruccion
 from Instrucciones.imprimir import Imprimir
+from Instrucciones.Declaracion import Declaracion
 from Expresiones.Primitivos import Primitivos
 from TablaSimbolos.tipo import TIPO
 from Expresiones.Aritmetica import Aritmetica
 from Expresiones.Relacional import Relacional
 from Expresiones.Logica import Logica
+from Expresiones.Identificador import Identificador
 
 from TablaSimbolos.tipo import OperadorAritmetico, OperadorRelacional, OperadorLogico
 
@@ -234,6 +237,8 @@ def p_instruccion(t):
     '''
     instruccion : instPrint finalizacion
                 | expresion finalizacion 
+                | declararVar finalizacion
+                | asignacion finalizacion
     '''
     t[0] = t[1]
 
@@ -312,7 +317,11 @@ def p_expresion_agrupacion(t):
     '''
     t[0] = t[2]
 
-#--------------PRIMITIVOS----------------
+#-----------------PRIMITIVOS-------------------
+def p_expresion_ID(t):
+    '''expresion : ID'''
+    t[0] = Identificador(t.lineno(1), get_column(input, t.slice[1]), t[1])
+
 def p_expresion_ENTERO(t):
     '''expresion : ENTERO'''
     t[0] = Primitivos(t.lineno(1), get_column(input, t.slice[1]), TIPO.ENTERO, t[1])
@@ -341,7 +350,21 @@ def p_instruccion_error(t):
     errores.append(Excepcion("Error con el caracter " + str(t[1].value) , "Sintáctico" , t.lineno(1), get_column(input, t.slice[1])))
     t[0] = ""
 
-#-------------------------------------------Imprimir-------------------------------------
+#-----------------------------------------------declararVar----------------------------------------------
+
+def p_declararVar(t):
+    'declararVar : TKN_VAR ID'
+    t[0] = Declaracion(t.lineno(1), get_column(input, t.slice[1]),t[2])
+
+def p_declararVarAsignacion(t):
+    'declararVar : TKN_VAR ID TKN_IGUAL expresion'
+    t[0] = Declaracion(t.lineno(1), get_column(input, t.slice[1]),t[2],t[4])
+
+#------------------------------------------------asignacion------------------------------------------------
+
+def p_asignacion(t):
+    'asignacion : ID TKN_IGUAL expresion'
+    t[0] = Declaracion(t.lineno(1), get_column(input, t.slice[1]),t[2],t[4])
 
 
 import ply.yacc as yacc
@@ -373,7 +396,7 @@ entrada = f.read()
 from TablaSimbolos.ArbolAST import Arbol
 from TablaSimbolos.tablaSimbolos import TablaSimbolos
 
-instrucciones = parse(entrada) #ARBOL AST
+instrucciones = parse(entrada.lower()) #ARBOL AST
 ast = Arbol(instrucciones)
 
 TSGlobal = TablaSimbolos()
