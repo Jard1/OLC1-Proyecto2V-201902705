@@ -1,1 +1,14 @@
-PriNT(TrUe+fAlSe);
+var suma = 123+5*0+500/500;
+
+var holi = "hola mundo";
+print(holi);
+if (suma==124){
+    var holi = 80;
+    print("la jerarquia funciona siuuuu");
+    print(holi+80);
+    var holi;
+}else{
+    print("hubo algo mal xd");
+}
+
+print(holi);

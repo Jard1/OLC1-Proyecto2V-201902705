@@ -195,17 +195,19 @@ precedence = (
 #                                                         Parte sintactica                                                   *
 #*****************************************************************************************************************************
 
-from TablaSimbolos.instruccionAbstract import Instruccion
-from Instrucciones.imprimir import Imprimir
 from Instrucciones.Declaracion import Declaracion
 from Instrucciones.Asignacion import Asignacion
+from Instrucciones.If import If
+from Instrucciones.imprimir import Imprimir
+
 from Expresiones.Primitivos import Primitivos
-from TablaSimbolos.tipo import TIPO
 from Expresiones.Aritmetica import Aritmetica
 from Expresiones.Relacional import Relacional
 from Expresiones.Logica import Logica
 from Expresiones.Identificador import Identificador
 
+from TablaSimbolos.tipo import TIPO
+from TablaSimbolos.instruccionAbstract import Instruccion
 from TablaSimbolos.tipo import OperadorAritmetico, OperadorRelacional, OperadorLogico
 
 #------------------------------------------Inicio gramatica-----------------------------------------
@@ -242,6 +244,7 @@ def p_instruccion(t):
                 | declararVar finalizacion
                 | asignacion finalizacion
                 | instIF
+                | 
     '''
     t[0] = t[1]
 
@@ -376,12 +379,15 @@ def p_asignacion(t):
 
 def p_instIF_simple(t):
     'instIF : TKN_IF TKN_PARIZQ expresion TKN_PARDER TKN_LLAVEIZQ instrucciones TKN_LLAVEDER'
+    t[0] = If(t.lineno(1), get_column(input, t.slice[1]),t[3], t[6], None, None)
 
 def p_instIF_else(t):
     'instIF : TKN_IF TKN_PARIZQ expresion TKN_PARDER TKN_LLAVEIZQ instrucciones TKN_LLAVEDER TKN_ELSE TKN_LLAVEIZQ instrucciones TKN_LLAVEDER'
+    t[0] = If(t.lineno(1), get_column(input, t.slice[1]),t[3], t[6], t[10], None)
 
 def p_instIF_elseIF(t):
     'instIF : TKN_IF TKN_PARIZQ expresion TKN_PARDER TKN_LLAVEIZQ instrucciones TKN_LLAVEDER instIF'
+    t[0] = If(t.lineno(1), get_column(input, t.slice[1]),t[3], t[6], None, t[8])
 
 import ply.yacc as yacc
 parser = yacc.yacc()
