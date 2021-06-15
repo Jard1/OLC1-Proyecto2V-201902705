@@ -6,9 +6,8 @@ class TablaSimbolos:
     #contructor
     def __init__(self, tablaAnterior = None):
         
-        self.tablaAnterior = tablaAnterior #la tabla de simbolos anterior (para ver lo de los ambitos)
-        
         self.tabla = {}
+        self.tablaAnterior = tablaAnterior #la tabla de simbolos anterior (para ver lo de los ambitos)
         self.funciones = []
 
     #------------------------------------------Obtener variable
@@ -18,10 +17,10 @@ class TablaSimbolos:
         tablaActual = self      
 
         #buscamos en todas las tablas enlazadas a la variable
-        while tablaActual != None:
-            if id.lower() in self.tabla :
+        while tablaActual.tabla != None:
+            if id in tablaActual.tabla :
                 #si esta en la tabla, lo retorna
-                return self.tabla[id.lower()]
+                return tablaActual.tabla[id]
             else:
                 tablaActual = tablaActual.tablaAnterior
         return None
@@ -44,14 +43,14 @@ class TablaSimbolos:
 
         while tablaActual != None:
             
-            if simbolo.id.lower() in self.tabla :
+            if simbolo.id in tablaActual.tabla :
                 
                 #si es del mismo tipo, o no tiene un tipo definido , o le asignan el valor de null
-                if self.tabla[simbolo.id.lower()].getTipo() == simbolo.getTipo() or self.tabla[simbolo.id.lower()].getTipo() == TIPO.NULO or simbolo.getTipo() == TIPO.NULO :
+                if tablaActual.tabla[simbolo.id].getTipo() == simbolo.getTipo() or tablaActual.tabla[simbolo.id].getTipo() == TIPO.NULO or simbolo.getTipo() == TIPO.NULO :
 
                     #cambiamos por el nuevo valor
-                    self.tabla[simbolo.id.lower()].setTipo(simbolo.getTipo())
-                    self.tabla[simbolo.id.lower()].setValor(simbolo.getValor())
+                    tablaActual.tabla[simbolo.id].setTipo(simbolo.getTipo())
+                    tablaActual.tabla[simbolo.id].setValor(simbolo.getValor())
                     return None
                 return Excepcion ("El valor asignado no es compatible con el tipo de dato de la variable", "Semantico" ,simbolo.getFila(), simbolo.getColumna())
             else:

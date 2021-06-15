@@ -127,17 +127,19 @@ def t_ID(t):
      return t
 
 def t_CADENA(t):
-    #r'(\".*?\")'
-    r'(\".*(\\\")*?\")'
+    #r'(\".*(\\\")*?\")'
+    r'(\"([^"\\]|(\\n)|(\\\\)|(\\\")|(\\t)|(\\\'))*\")' #cualquier cosa menos el " o la \
     t.value = t.value[1:-1] # para quitar las comillas dobles
     #caracteres especiales
-    t.value = str(t.value).replace('\\n', '\n').replace('\\\"', '\"').replace('\\t', '\t').replace('\\\'', '\'').replace('\\\\', '\\')
+    t.value = str(t.value).replace('\\n', '\n').replace('\\\\', '\\').replace('\\\"', '\"').replace('\\t', '\t').replace('\\\'', '\'')
     return t
 
 def t_CHARACTER(t):
     #r'(\".*?\")'
-    r'(\'.\')|(\'\\n\')|(\'\\r\')|(\'\\t\')|(\'\\\"\')|(\'\\\'\')|(\'\\\\\')'
+    #r'(\'.\')|(\'\\n\')|(\'\\r\')|(\'\\t\')|(\'\\\"\')|(\'\\\'\')|(\'\\\\\')'
+    r'(\'([^\'\\]|(\\n)|(\\\\)|(\\\")|(\\t)|(\\\'))\')'
     t.value = t.value[1:-1] # para quitar las comillas dobles
+    t.value = str(t.value).replace('\\n', '\n').replace('\\\\', '\\').replace('\\\"', '\"').replace('\\t', '\t').replace('\\\'', '\'')
     #caracteres especiales
     return t
 
@@ -199,6 +201,8 @@ from Instrucciones.Declaracion import Declaracion
 from Instrucciones.Asignacion import Asignacion
 from Instrucciones.If import If
 from Instrucciones.imprimir import Imprimir
+from Instrucciones.While import While
+from Instrucciones.Break import Break
 
 from Expresiones.Primitivos import Primitivos
 from Expresiones.Aritmetica import Aritmetica
@@ -244,7 +248,8 @@ def p_instruccion(t):
                 | declararVar finalizacion
                 | asignacion finalizacion
                 | instIF
-                | 
+                | instWhile
+                | instBreak finalizacion
     '''
     t[0] = t[1]
 
@@ -386,8 +391,19 @@ def p_instIF_else(t):
     t[0] = If(t.lineno(1), get_column(input, t.slice[1]),t[3], t[6], t[10], None)
 
 def p_instIF_elseIF(t):
-    'instIF : TKN_IF TKN_PARIZQ expresion TKN_PARDER TKN_LLAVEIZQ instrucciones TKN_LLAVEDER instIF'
-    t[0] = If(t.lineno(1), get_column(input, t.slice[1]),t[3], t[6], None, t[8])
+    'instIF : TKN_IF TKN_PARIZQ expresion TKN_PARDER TKN_LLAVEIZQ instrucciones TKN_LLAVEDER TKN_ELSE instIF'
+    t[0] = If(t.lineno(1), get_column(input, t.slice[1]),t[3], t[6], None, t[9])
+
+#------------------------------------------------------instWhile-----------------------------------------------------
+def p_instWhile(t):
+    'instWhile : TKN_WHILE TKN_PARIZQ expresion TKN_PARDER TKN_LLAVEIZQ instrucciones TKN_LLAVEDER'
+    t[0] = While(t.lineno(1), get_column(input, t.slice[1]),t[3], t[6])
+
+#------------------------------------------------------instBreak-----------------------------------------------------
+def p_instBreak(t):
+    'instBreak : TKN_BREAK'
+    t[0] = Break(t.lineno(1), get_column(input, t.slice[1]))
+
 
 import ply.yacc as yacc
 parser = yacc.yacc()
