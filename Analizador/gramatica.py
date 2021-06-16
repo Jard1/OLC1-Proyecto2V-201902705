@@ -1,10 +1,11 @@
-#*****************************************************************************************************************
-#                                                       Parte Lexica                                             *
-#*****************************************************************************************************************
+#***************************************************************************************************************************
+#                                                       Analisis lexico                                                    *
+#***************************************************************************************************************************
+
 from TablaSimbolos.Excepcion import Excepcion
 errores = []
 
-#tipos de datos
+# --- tipos de datos
 tiposDatos = {
     'int' : 'TKN_INT',
     'double' : 'TKN_DOUBLE',
@@ -66,7 +67,7 @@ tokens = [
 
 ] + list(tiposDatos.values()) + list(reservadas.values())
 
-#operadores aritmeticos
+#--------------------------operadores aritmeticos
 t_TKN_MAS       = r'\+'
 t_TKN_MENOS     = r'-'
 t_TKN_POR       = r'\*'
@@ -86,7 +87,7 @@ t_TKN_COMA          = r'\,'
 t_TKN_INCREMENTO    = r'\+\+'
 t_TKN_DECREMENTO    = r'--'
 
-#relacionales
+#--------------------------relacionales
 t_TKN_DIFERENTE     = r'=!'
 t_TKN_IGUAL_IGUAL   = r'=='
 t_TKN_MENOR         = r'<'
@@ -97,7 +98,7 @@ t_TKN_MAYORI        = r'>='
 t_TKN_DOSPUNTOS     = r':'
 t_TKN_IGUAL         = r'='
 
-#logicos
+#--------------------------logicos
 t_TKN_OR        = r'\|\|'
 t_TKN_AND       = r'&&'
 t_TKN_NOT       = r'!'
@@ -179,23 +180,21 @@ import ply.lex as lex
 lexer = lex.lex(reflags= re.IGNORECASE)
 
 
-
-
-# Presedencia
+# ----------------------------------Precedencia
 precedence = (
-    ('left', 'TKN_MAS', 'TKN_MENOS'),
-    ('left', 'TKN_POR', 'TKN_DIV', 'TKN_MOD'),
-    ('left', 'TKN_POTENCIA'),
-    ('right', 'UMENOS'),
     ('left', 'TKN_OR'),
     ('left', 'TKN_AND'),
     ('right', 'UNOT'),   
     ('left','TKN_IGUAL_IGUAL','TKN_DIFERENTE','TKN_MENOR', 'TKN_MENORI', 'TKN_MAYOR', 'TKN_MAYORI'),
+    ('left', 'TKN_MAS', 'TKN_MENOS'),
+    ('left', 'TKN_POR', 'TKN_DIV', 'TKN_MOD'),
+    ('left', 'TKN_POTENCIA'),
+    ('right', 'UMENOS'),
 )
 
-#*****************************************************************************************************************************
-#                                                         Parte sintactica                                                   *
-#*****************************************************************************************************************************
+#*************************************************************************************************************************************
+#                                                         Analisis sintactico                                                        *
+#*************************************************************************************************************************************
 
 from Instrucciones.Declaracion import Declaracion
 from Instrucciones.Asignacion import Asignacion
@@ -213,6 +212,7 @@ from Expresiones.Identificador import Identificador
 from TablaSimbolos.tipo import TIPO
 from TablaSimbolos.instruccionAbstract import Instruccion
 from TablaSimbolos.tipo import OperadorAritmetico, OperadorRelacional, OperadorLogico
+from Instrucciones.Main import Main
 
 #------------------------------------------Inicio gramatica-----------------------------------------
 def p_s(t):
@@ -250,6 +250,7 @@ def p_instruccion(t):
                 | instIF
                 | instWhile
                 | instBreak finalizacion
+                | instMain
     '''
     t[0] = t[1]
 
@@ -257,6 +258,11 @@ def p_instruccion(t):
 def p_instPrint(t):
     'instPrint : TKN_PRINT TKN_PARIZQ expresion TKN_PARDER'
     t[0] = Imprimir(t.lineno(1), get_column(input, t.slice[1]),t[3])   
+
+#----------------------------------------------instMain---------------------------------------------------
+def p_instMain(t):
+    'instMain : TKN_MAIN TKN_PARIZQ TKN_PARDER TKN_LLAVEIZQ instrucciones TKN_LLAVEDER'
+    t[0] = Main(t.lineno(1), get_column(input, t.slice[1]),t[5])   
 
 #--------------------------------------------Expresion---------------------------------------------------
 def p_expresion_binaria(t):
@@ -405,6 +411,7 @@ def p_instBreak(t):
     t[0] = Break(t.lineno(1), get_column(input, t.slice[1]))
 
 
+#----------------------------Se ejecuta el analisis sintactico---------------------------------
 import ply.yacc as yacc
 parser = yacc.yacc()
 input = ''
@@ -413,6 +420,7 @@ def getErrores():
     return errores
 
 def parse(inp):
+
     global errores
     global lexer
     errores = []
@@ -422,19 +430,16 @@ def parse(inp):
     input = inp
     return parser.parse(inp)
 
-
+#-----------------------------------------------------------------------------------------------------
 
 f = open("./entrada.txt", "r")
 entrada = f.read()
 
-#print(parse(entrada))
-#parser.parse(input)
-#print("Archivo ejecutado correctamente :D")
-
 from TablaSimbolos.ArbolAST import Arbol
 from TablaSimbolos.tablaSimbolos import TablaSimbolos
+from Instrucciones.Break import Break
 
-instrucciones = parse(entrada) #ARBOL AST
+instrucciones = parse(entrada)
 ast = Arbol(instrucciones)
 
 TSGlobal = TablaSimbolos()
@@ -446,10 +451,56 @@ for error in errores:
     ast.updateConsole(error.toString())
 
 # realizar las instrucciones deseadas, que estan guardadas en el ast
+
+#------------------------------Primera pasada(solo para ver varaibles y declaraciones)----------------------------------------------
 for instruccion in ast.getInstrucciones():
-    value = instruccion.interpretar(ast,TSGlobal)
-    if isinstance(value, Excepcion) :
-        ast.getExcepciones().append(value)
-        ast.updateConsole(value.toString())
+    #afuera del main, solo se permiten declaraciones y asignaciones
+    if isinstance(instruccion,Declaracion) or isinstance(instruccion,Asignacion):
+        value = instruccion.interpretar(ast,TSGlobal)
+        if isinstance(value, Excepcion) :
+            ast.getExcepciones().append(value)
+            ast.updateConsole(value.toString())
+        if isinstance(value, Break) :
+            error =  Excepcion("No se puede declarar un break fuera de un ciclo","Semantico", instruccion.fila,instruccion.columna)
+            ast.getExcepciones().append(error)
+            ast.updateConsole(error.toString())
+            #break
+    elif  not isinstance(instruccion,Main):
+        error =  Excepcion("Solo se pueden declarar o asignar variables afuera de las funciones","Semantico", instruccion.fila,instruccion.columna)
+        ast.getExcepciones().append(error)
+        ast.updateConsole(error.toString())
+
+#------------------------------------Segunta pasada, solo para contar cuantos main vienen------------------------------------------
+contMain = 0
+
+for instruccion in ast.getInstrucciones():
+    
+    if isinstance(instruccion, Main):
+        contMain += 1
+
+#------------------------------------Tercera pasada(para llamar a la instruccion main)----------------------------------------------------
+
+for instruccion in ast.getInstrucciones():
+
+    if isinstance(instruccion, Main):
+        
+        if contMain == 1:
+            #solo si hay un main se ejecuta el programa
+            value = instruccion.interpretar(ast,TSGlobal)
+            if isinstance(value, Excepcion) :
+                ast.getExcepciones().append(value)
+                ast.updateConsole(value.toString())
+            if isinstance(value, Break): 
+                err = Excepcion("Sentencia BREAK fuera de ciclo", "Semantico", instruccion.fila, instruccion.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsole(err.toString())
+        else:
+            #si hay mas de un main, se cierra la ejecucion
+            err = Excepcion("No puede haber mas de una funcion main, se terminara la ejecucion del programa...", "Semantico", instruccion.fila, instruccion.columna)
+            ast.getExcepciones().append(err)
+            ast.updateConsole(err.toString())
+            break
+        YaHayMain = True
 
 print(ast.getConsola())
+

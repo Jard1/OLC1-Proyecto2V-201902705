@@ -26,7 +26,7 @@ class Declaracion(Instruccion):
 
         else:
             value = self.expresion.interpretar(tree, table) # Valor por asignar
-            self.determinarTipo(value)
+            self.tipo = self.expresion.tipo
             if isinstance(value, Excepcion): 
                 return value #Si es un error, lo retornamos
 
@@ -39,24 +39,3 @@ class Declaracion(Instruccion):
             return None #la declaracion fue correcta
 
     
-    def determinarTipo(self,value):
-        
-        if value == "null":
-            print("valor nulo")
-            self.tipo = TIPO.NULO
-        elif type(value) == int:
-            self.tipo = TIPO.ENTERO
-        elif type(value) == float:
-            self.tipo = TIPO.DECIMAL
-        elif type(value) == bool:
-            self.tipo = TIPO.BOOLEANO
-        elif type(value) == str:
-            if len(value) == 1:
-                self.tipo = TIPO.CHARACTER
-            else:
-                self.tipo = TIPO.CADENA
-
-        return Excepcion("Semantico", "Tipo de dato no definido", self.fila, self.columna)
-
-
-

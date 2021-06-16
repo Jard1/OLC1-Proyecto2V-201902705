@@ -42,30 +42,30 @@ root.title("JPR Editor - 201902705 - Proyecto Compiladores 1")
 #---------------------------------FRAME DE ABAJO--------------------------------------------
 frameAbajo = Frame()
 frameAbajo.pack(side = "bottom", fill = "x")
-frameAbajo.config(bg = "#007acc", width = w, height = "150")
+frameAbajo.config(bg = "orange", width = w, height = "150")
 #---------------------Label archivo------------------------
-lbFile = Label(frameAbajo, text = "Archivo: ", fg = "white", bg = "#0079cc")
+lbFile = Label(frameAbajo, text = "Archivo: ", fg = "white", bg = "orange")
 lbFile.config(font = ("Arial", 15))
 lbFile.grid(row = 0, column = 0)
 
-lbFilaValor = Label(frameAbajo, text= rutaArchivo, fg="white", bg= "#0079cc")
+lbFilaValor = Label(frameAbajo, text= rutaArchivo, fg="white", bg= "orange")
 lbFilaValor.config(font = ("Arial", 15))
 lbFilaValor.grid(row = 0, column = 1)
 ##------------------Label numero fila----------------
-lbFila = Label(frameAbajo, text = "\t\t\t\t Fila:", fg = "white", bg = "#0079cc")
+lbFila = Label(frameAbajo, text = "\t\t\t\t Fila:", fg = "white", bg = "orange")
 lbFila.config(font = ("Arial", 15))
 lbFila.grid(row = 0, column = 2)
 
-lbFilaValor = Label(frameAbajo, text= FilaCount, fg="white", bg= "#0079cc")
+lbFilaValor = Label(frameAbajo, text= FilaCount, fg="white", bg= "orange")
 lbFilaValor.config(font = ("Arial", 15))
 lbFilaValor.grid(row = 0, column = 3)
 
 ##----------Label numero columna------------------
-lbColumna = Label(frameAbajo, text = " | Columna:", fg = "white", bg = "#0079cc")
+lbColumna = Label(frameAbajo, text = " | Columna:", fg = "white", bg = "orange")
 lbColumna.config(font = ("Arial", 15))
 lbColumna.grid(row = 0, column = 4)
 
-lbColumnaValor = Label(frameAbajo, text= ColumnaCount, fg="white", bg= "#0079cc")
+lbColumnaValor = Label(frameAbajo, text= ColumnaCount, fg="white", bg= "orange")
 lbColumnaValor.config(font = ("Arial", 15))
 lbColumnaValor.grid(row = 0, column = 5)
 
@@ -129,22 +129,22 @@ txtConsola.grid(row = 2, column = 2)
 root.config(menu = barMenu)
 
 def current_row(flag): 
-    global rowCount
+    global FilaCount
     if flag: 
         FilaCount += 1
-        lblRow2.config(text = rowCount)
+        lbFilaValor.config(text = FilaCount)
     else: 
         FilaCount -= 1
-        lblRow2.config(text = rowCount)
+        lbFilaValor.config(text = FilaCount)
 
 def current_column(flag): 
-    global columnCount
+    global ColumnaCount
     if flag: 
         ColumnaCount += 1
-        lblColumn2.config(text = columnCount)
+        lbColumnaValor.config(text = ColumnaCount)
     else: 
         ColumnaCount -= 1
-        lblColumn2.config(text = columnCount)
+        lbColumnaValor.config(text = ColumnaCount)
 
 def position(e): 
     if e.keysym == "Up": 
@@ -159,16 +159,16 @@ def position(e):
         current_row(True)
 
 def positionPush(e = None): 
-    global rowCount
-    global columnCount
+    global FilaCount
+    global ColumnaCount
     #messagebox.showinfo("hola", e.keysym)
 
     positions = txtInput.index("current").split('.')
-    lblRow2.config(text = positions[0])
+    lbFilaValor.config(text = positions[0])
     rowCount = int(positions[0])
     column = int(positions[1]) + 1
     ColumnaCount = column
-    lblColumn2.config(text = column)
+    lbColumnaValor.config(text = column)
 
 
 root.mainloop()

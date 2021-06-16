@@ -231,9 +231,11 @@ class Aritmetica(Instruccion):
         elif self.operador == OperadorAritmetico.UMENOS:
             #------------------------ENTERO----------------------
             if (self.ExpresionIzq.tipo == TIPO.ENTERO) :
+                self.tipo = TIPO.ENTERO
                 return - self.ValorReal(self.ExpresionIzq.tipo, izquierda) 
             #------------------------DECIMAL----------------------
-            if (self.ExpresionIzq.tipo == TIPO.ENTERO) :
+            if (self.ExpresionIzq.tipo == TIPO.DECIMAL) :
+                self.tipo = TIPO.DECIMAL
                 return - self.ValorReal(self.ExpresionIzq.tipo, izquierda) 
             return Excepcion("No se puede hacer negacion unaria con ese tipo de dato", "Semantico" , self.fila, self.columna)
 

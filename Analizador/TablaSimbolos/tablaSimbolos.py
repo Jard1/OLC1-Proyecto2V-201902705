@@ -8,7 +8,7 @@ class TablaSimbolos:
         
         self.tabla = {}
         self.tablaAnterior = tablaAnterior #la tabla de simbolos anterior (para ver lo de los ambitos)
-        self.funciones = []
+        #self.funciones = []
 
     #------------------------------------------Obtener variable
 
@@ -17,7 +17,7 @@ class TablaSimbolos:
         tablaActual = self      
 
         #buscamos en todas las tablas enlazadas a la variable
-        while tablaActual.tabla != None:
+        while tablaActual != None:
             if id in tablaActual.tabla :
                 #si esta en la tabla, lo retorna
                 return tablaActual.tabla[id]
@@ -43,17 +43,19 @@ class TablaSimbolos:
 
         while tablaActual != None:
             
-            if simbolo.id in tablaActual.tabla :
+            if simbolo.id.lower() in tablaActual.tabla :
                 
                 #si es del mismo tipo, o no tiene un tipo definido , o le asignan el valor de null
-                if tablaActual.tabla[simbolo.id].getTipo() == simbolo.getTipo() or tablaActual.tabla[simbolo.id].getTipo() == TIPO.NULO or simbolo.getTipo() == TIPO.NULO :
+                if tablaActual.tabla[simbolo.id.lower()].getTipo() == simbolo.getTipo() or tablaActual.tabla[simbolo.id.lower()].getTipo() == TIPO.NULO or simbolo.getTipo() == TIPO.NULO :
 
                     #cambiamos por el nuevo valor
-                    tablaActual.tabla[simbolo.id].setTipo(simbolo.getTipo())
-                    tablaActual.tabla[simbolo.id].setValor(simbolo.getValor())
+                    tablaActual.tabla[simbolo.id.lower()].setValor(simbolo.getValor())
+                    tablaActual.tabla[simbolo.id.lower()].setTipo(simbolo.getTipo())
                     return None
                 return Excepcion ("El valor asignado no es compatible con el tipo de dato de la variable", "Semantico" ,simbolo.getFila(), simbolo.getColumna())
             else:
+
                 tablaActual = tablaActual.tablaAnterior
+        
         return Excepcion ("No se ha declarado la variable que esta asignando","Semantico" ,simbolo.getFila(), simbolo.getColumna())
         
