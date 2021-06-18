@@ -1,6 +1,6 @@
-from TablaSimbolos.instruccionAbstract import Instruccion
-from TablaSimbolos.Excepcion import Excepcion
-from TablaSimbolos.tipo import TIPO
+from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
+from Analizador.TablaSimbolos.Excepcion import Excepcion
+from Analizador.TablaSimbolos.tipo import TIPO
 
 class Imprimir(Instruccion): #hacemos la herencia
 

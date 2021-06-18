@@ -1,4 +1,4 @@
-from TablaSimbolos.instruccionAbstract import Instruccion
+from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
 
 class Primitivos(Instruccion): #hacemos la herencia
 

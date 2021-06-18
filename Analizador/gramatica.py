@@ -2,7 +2,7 @@
 #                                                       Analisis lexico                                                    *
 #***************************************************************************************************************************
 
-from TablaSimbolos.Excepcion import Excepcion
+from Analizador.TablaSimbolos.Excepcion import Excepcion
 errores = []
 
 # --- tipos de datos
@@ -176,7 +176,7 @@ def get_column(inp, token):
 
 # Construyendo el analizador lexico
 import re
-import ply.lex as lex
+import Analizador.ply.lex as lex
 lexer = lex.lex(reflags= re.IGNORECASE)
 
 
@@ -196,23 +196,23 @@ precedence = (
 #                                                         Analisis sintactico                                                        *
 #*************************************************************************************************************************************
 
-from Instrucciones.Declaracion import Declaracion
-from Instrucciones.Asignacion import Asignacion
-from Instrucciones.If import If
-from Instrucciones.imprimir import Imprimir
-from Instrucciones.While import While
-from Instrucciones.Break import Break
+from Analizador.Instrucciones.Declaracion import Declaracion
+from Analizador.Instrucciones.Asignacion import Asignacion
+from Analizador.Instrucciones.If import If
+from Analizador.Instrucciones.imprimir import Imprimir
+from Analizador.Instrucciones.While import While
+from Analizador.Instrucciones.Break import Break
 
-from Expresiones.Primitivos import Primitivos
-from Expresiones.Aritmetica import Aritmetica
-from Expresiones.Relacional import Relacional
-from Expresiones.Logica import Logica
-from Expresiones.Identificador import Identificador
+from Analizador.Expresiones.Primitivos import Primitivos
+from Analizador.Expresiones.Aritmetica import Aritmetica
+from Analizador.Expresiones.Relacional import Relacional
+from Analizador.Expresiones.Logica import Logica
+from Analizador.Expresiones.Identificador import Identificador
 
-from TablaSimbolos.tipo import TIPO
-from TablaSimbolos.instruccionAbstract import Instruccion
-from TablaSimbolos.tipo import OperadorAritmetico, OperadorRelacional, OperadorLogico
-from Instrucciones.Main import Main
+from Analizador.TablaSimbolos.tipo import TIPO
+from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
+from Analizador.TablaSimbolos.tipo import OperadorAritmetico, OperadorRelacional, OperadorLogico
+from Analizador.Instrucciones.Main import Main
 
 #------------------------------------------Inicio gramatica-----------------------------------------
 def p_s(t):
@@ -412,7 +412,7 @@ def p_instBreak(t):
 
 
 #----------------------------Se ejecuta el analisis sintactico---------------------------------
-import ply.yacc as yacc
+import Analizador.ply.yacc as yacc
 parser = yacc.yacc()
 input = ''
 
@@ -432,75 +432,77 @@ def parse(inp):
 
 #-----------------------------------------------------------------------------------------------------
 
-f = open("./entrada.txt", "r")
-entrada = f.read()
+#f = open("./entrada.txt", "r")
+#entrada = f.read()
 
-from TablaSimbolos.ArbolAST import Arbol
-from TablaSimbolos.tablaSimbolos import TablaSimbolos
-from Instrucciones.Break import Break
+from Analizador.TablaSimbolos.ArbolAST import Arbol
+from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
+from Analizador.Instrucciones.Break import Break
 
-instrucciones = parse(entrada)
-ast = Arbol(instrucciones)
+def ejecutarAnalisis(entrada):
 
-TSGlobal = TablaSimbolos()
-ast.setTSglobal(TSGlobal)
+    instrucciones = parse(entrada)
+    ast = Arbol(instrucciones)
 
-#Para mostrar la lista DE ERRORES LEXICOS Y SINTACTICOS
-for error in errores:                   
-    ast.getExcepciones().append(error)
-    ast.updateConsole(error.toString())
+    TSGlobal = TablaSimbolos()
+    ast.setTSglobal(TSGlobal)
 
-# realizar las instrucciones deseadas, que estan guardadas en el ast
-
-#------------------------------Primera pasada(solo para ver varaibles y declaraciones)----------------------------------------------
-for instruccion in ast.getInstrucciones():
-    #afuera del main, solo se permiten declaraciones y asignaciones
-    if isinstance(instruccion,Declaracion) or isinstance(instruccion,Asignacion):
-        value = instruccion.interpretar(ast,TSGlobal)
-        if isinstance(value, Excepcion) :
-            ast.getExcepciones().append(value)
-            ast.updateConsole(value.toString())
-        if isinstance(value, Break) :
-            error =  Excepcion("No se puede declarar un break fuera de un ciclo","Semantico", instruccion.fila,instruccion.columna)
-            ast.getExcepciones().append(error)
-            ast.updateConsole(error.toString())
-            #break
-    elif  not isinstance(instruccion,Main):
-        error =  Excepcion("Solo se pueden declarar o asignar variables afuera de las funciones","Semantico", instruccion.fila,instruccion.columna)
+    #Para mostrar la lista DE ERRORES LEXICOS Y SINTACTICOS
+    for error in errores:                   
         ast.getExcepciones().append(error)
         ast.updateConsole(error.toString())
 
-#------------------------------------Segunta pasada, solo para contar cuantos main vienen------------------------------------------
-contMain = 0
+    # realizar las instrucciones deseadas, que estan guardadas en el ast
 
-for instruccion in ast.getInstrucciones():
-    
-    if isinstance(instruccion, Main):
-        contMain += 1
-
-#------------------------------------Tercera pasada(para llamar a la instruccion main)----------------------------------------------------
-
-for instruccion in ast.getInstrucciones():
-
-    if isinstance(instruccion, Main):
-        
-        if contMain == 1:
-            #solo si hay un main se ejecuta el programa
+    #------------------------------Primera pasada(solo para ver varaibles y declaraciones)----------------------------------------------
+    for instruccion in ast.getInstrucciones():
+        #afuera del main, solo se permiten declaraciones y asignaciones
+        if isinstance(instruccion,Declaracion) or isinstance(instruccion,Asignacion):
             value = instruccion.interpretar(ast,TSGlobal)
             if isinstance(value, Excepcion) :
                 ast.getExcepciones().append(value)
                 ast.updateConsole(value.toString())
-            if isinstance(value, Break): 
-                err = Excepcion("Sentencia BREAK fuera de ciclo", "Semantico", instruccion.fila, instruccion.columna)
+            if isinstance(value, Break) :
+                error =  Excepcion("No se puede declarar un break fuera de un ciclo","Semantico", instruccion.fila,instruccion.columna)
+                ast.getExcepciones().append(error)
+                ast.updateConsole(error.toString())
+                #break
+        elif  not isinstance(instruccion,Main):
+            error =  Excepcion("Solo se pueden declarar o asignar variables afuera de las funciones","Semantico", instruccion.fila,instruccion.columna)
+            ast.getExcepciones().append(error)
+            ast.updateConsole(error.toString())
+
+    #------------------------------------Segunta pasada, solo para contar cuantos main vienen------------------------------------------
+    contMain = 0
+
+    for instruccion in ast.getInstrucciones():
+        
+        if isinstance(instruccion, Main):
+            contMain += 1
+
+    #------------------------------------Tercera pasada(para llamar a la instruccion main)----------------------------------------------------
+
+    for instruccion in ast.getInstrucciones():
+
+        if isinstance(instruccion, Main):
+            
+            if contMain == 1:
+                #solo si hay un main se ejecuta el programa
+                value = instruccion.interpretar(ast,TSGlobal)
+                if isinstance(value, Excepcion) :
+                    ast.getExcepciones().append(value)
+                    ast.updateConsole(value.toString())
+                if isinstance(value, Break): 
+                    err = Excepcion("Sentencia BREAK fuera de ciclo", "Semantico", instruccion.fila, instruccion.columna)
+                    ast.getExcepciones().append(err)
+                    ast.updateConsole(err.toString())
+            else:
+                #si hay mas de un main, se cierra la ejecucion
+                err = Excepcion("No puede haber mas de una funcion main, se terminara la ejecucion del programa...", "Semantico", instruccion.fila, instruccion.columna)
                 ast.getExcepciones().append(err)
                 ast.updateConsole(err.toString())
-        else:
-            #si hay mas de un main, se cierra la ejecucion
-            err = Excepcion("No puede haber mas de una funcion main, se terminara la ejecucion del programa...", "Semantico", instruccion.fila, instruccion.columna)
-            ast.getExcepciones().append(err)
-            ast.updateConsole(err.toString())
-            break
-        YaHayMain = True
+                break
+            YaHayMain = True
 
-print(ast.getConsola())
-
+    print(ast.getConsola())
+    return ast.getConsola()

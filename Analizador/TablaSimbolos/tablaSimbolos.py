@@ -1,5 +1,5 @@
-from TablaSimbolos.Excepcion import Excepcion
-from TablaSimbolos.tipo import TIPO
+from Analizador.TablaSimbolos.Excepcion import Excepcion
+from Analizador.TablaSimbolos.tipo import TIPO
 
 class TablaSimbolos:
     

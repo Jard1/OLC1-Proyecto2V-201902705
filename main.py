@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk,scrolledtext,filedialog
 import analisisTokensEntrada as analisisTokensEntrada
+from Analizador.gramatica import ejecutarAnalisis
  
 #**********************************************************Funcionalidad************************************************************
  
@@ -131,6 +132,11 @@ def nuevo():
     rutaArchivo=""
     lbArchivoValor.config(text=rutaArchivo)
 
+def ejecutar():
+    textoEntrada = txtInput.get(1.0,END)
+    salida = ejecutarAnalisis(textoEntrada)
+    txtConsola.insert(INSERT, salida)
+
 #******************************************************INTERFAZ GRAFICA********************************************************************
 
 #----------------------------Ventana ROOT-------------------------------------
@@ -165,7 +171,7 @@ frameArriba = Frame()
 frameArriba.pack(side = "top" , fill="x")
 frameArriba.config(bg = "#3c3c3c",  height = "50")
 
-btnAnalizer = Button(frameArriba, text = "Ejecutar", fg = "white", bg = "green", width = "15", height = "1")
+btnAnalizer = Button(frameArriba, text = "Ejecutar", fg = "white", bg = "green", width = "15", height = "1", command=ejecutar)
 btnAnalizer.config(font = ("Arial", 16))
 btnAnalizer.grid(row = 0, column = 0, padx= 230, pady=10)
 
@@ -175,7 +181,7 @@ lblDebugger = Label(frameArriba, text = "Debugger:", fg = "white", bg= "#3c3c3c"
 lblDebugger.config(font = ("Arial", 14))
 lblDebugger.grid(row = 0, column = 2, padx= 50)
 
-btnDebugger = Button(frameArriba, text = "Siguiente", bg = "yellow", width = "15", height = "1")
+btnDebugger = Button(frameArriba, text = "Siguiente", bg = "yellow", width = "15", height = "1" )
 btnDebugger.config(font = ("Arial", 16))
 btnDebugger.grid(row = 0, column = 3)
 
@@ -202,6 +208,10 @@ llenar_lineas(lineasCodigo,0)
 lineasCodigo.grid(row = 0, column = 0)
 
 txtInput = tk.Text(FrameInput, bg = "#1e1e1e", fg="white", insertbackground='white', width = 80, height = 35)#width = 80, height = 35,
+
+inputInicial = "#ejemplo de comentario\nmain() {\n \tvar a = 0; \n\tif(a==5-5){\n\t\tprint(\" el valor de a es: \" + a);\n\t}\n}"
+txtInput.insert(INSERT, inputInicial)
+analisis_formato_entrada()
 
 lineasCodigo['yscrollcommand'] = scroll_editor.set
 txtInput['yscrollcommand'] = scroll_editor.set
@@ -233,7 +243,7 @@ scroll_consola_x.grid(row=3, column=2, sticky=N+S+E+W)
 scroll_consola_y = Scrollbar(FrameConsola)
 scroll_consola_y.grid(row=0, column=3, sticky=tk.N+tk.S+tk.E+tk.W)
 
-txtConsola = tk.Text(FrameConsola, bg = "#1e1e1e", fg="white", insertbackground='white', width = 80, height = 35, yscrollcommand=scroll_consola_y.set, xscrollcommand=scroll_consola_x.set)
+txtConsola = tk.Text(FrameConsola, bg = "#1e1e1e", fg="#00BB2D", insertbackground='white', width = 80, height = 35, yscrollcommand=scroll_consola_y.set, xscrollcommand=scroll_consola_x.set)
 txtConsola.grid(row=0,column=2)
 
 

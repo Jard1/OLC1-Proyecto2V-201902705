@@ -1,8 +1,8 @@
-from TablaSimbolos.instruccionAbstract import Instruccion
-from TablaSimbolos.Excepcion import Excepcion
-from TablaSimbolos.tipo import TIPO
-from TablaSimbolos.tablaSimbolos import TablaSimbolos
-from Instrucciones.Break import Break
+from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
+from Analizador.TablaSimbolos.Excepcion import Excepcion
+from Analizador.TablaSimbolos.tipo import TIPO
+from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
+from Analizador.Instrucciones.Break import Break
 
 class While(Instruccion):
 

@@ -1,5 +1,5 @@
-from TablaSimbolos.instruccionAbstract import Instruccion
-from TablaSimbolos.Excepcion import Excepcion
+from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
+from Analizador.TablaSimbolos.Excepcion import Excepcion
 
 class Identificador(Instruccion):
     def __init__(self, fila, columna, identificador):
