@@ -202,6 +202,9 @@ from Analizador.Instrucciones.If import If
 from Analizador.Instrucciones.imprimir import Imprimir
 from Analizador.Instrucciones.While import While
 from Analizador.Instrucciones.Break import Break
+from Analizador.Instrucciones.For import For
+from Analizador.Instrucciones.incrementoDecremento import incrementoDecremento
+from Analizador.Instrucciones.Main import Main
 
 from Analizador.Expresiones.Primitivos import Primitivos
 from Analizador.Expresiones.Aritmetica import Aritmetica
@@ -212,7 +215,7 @@ from Analizador.Expresiones.Identificador import Identificador
 from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
 from Analizador.TablaSimbolos.tipo import OperadorAritmetico, OperadorRelacional, OperadorLogico
-from Analizador.Instrucciones.Main import Main
+
 
 #------------------------------------------Inicio gramatica-----------------------------------------
 def p_s(t):
@@ -251,8 +254,15 @@ def p_instruccion(t):
                 | instWhile
                 | instBreak finalizacion
                 | instMain
+                | instFor
     '''
     t[0] = t[1]
+
+#------------------------------------------Recuperacion de errores-------------------------------------------
+def p_instruccion_error(t):
+    'instruccion        : error TKN_PTCOMA'
+    errores.append(Excepcion("Error con el caracter " + str(t[1].value) , "Sintáctico" , t.lineno(1), get_column(input, t.slice[1])))
+    t[0] = ""
 
 #--------------------------------------------Print------------------------------------------------------    
 def p_instPrint(t):
@@ -325,7 +335,6 @@ def p_expresion_unaria(t):
     '''
     expresion : TKN_MENOS expresion %prec UMENOS
     '''
-    #t[0] = -t[2]
     t[0] = Aritmetica(t.lineno(1), get_column(input, t.slice[1]), t[2], OperadorAritmetico.UMENOS, None)
 
 def p_expresion_agrupacion(t):
@@ -334,7 +343,8 @@ def p_expresion_agrupacion(t):
     '''
     t[0] = t[2]
 
-#-----------------PRIMITIVOS-------------------
+#------------------------------PRIMITIVOS---------------------------------------
+
 def p_expresion_ID(t):
     '''expresion : ID'''
     t[0] = Identificador(t.lineno(1), get_column(input, t.slice[1]), t[1])
@@ -364,11 +374,19 @@ def p_expresion_boolean(t):
 def p_expresion_null(t):
     '''expresion : TKN_NULL'''
     t[0] = Primitivos(t.lineno(1), get_column(input, t.slice[1]), TIPO.NULO , t[1])
-#------------------------------------------Manejo de errores-------------------------------------------
-def p_instruccion_error(t):
-    'instruccion        : error TKN_PTCOMA'
-    errores.append(Excepcion("Error con el caracter " + str(t[1].value) , "Sintáctico" , t.lineno(1), get_column(input, t.slice[1])))
-    t[0] = ""
+
+def p_expresion_incrementoDecremento(t):
+    '''expresion : incrementoDecremento '''
+    t[0] = t[1]
+
+#------------------------------------------------incrementoDecremento----------------------------------
+def p_incrementoDecrementoMas(t):
+    'incrementoDecremento : ID TKN_INCREMENTO'
+    t[0] = incrementoDecremento(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorAritmetico.INCREMENTO)
+
+def p_incrementoDecrementoNenos(t):
+    'incrementoDecremento : ID TKN_DECREMENTO'
+    t[0] = incrementoDecremento(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorAritmetico.DECREMENTO)
 
 #-----------------------------------------------declararVar----------------------------------------------
 
@@ -379,6 +397,7 @@ def p_declararVar(t):
 def p_declararVarAsignacion(t):
     'declararVar : TKN_VAR ID TKN_IGUAL expresion'
     t[0] = Declaracion(t.lineno(1), get_column(input, t.slice[1]),t[2],t[4])
+
 
 #------------------------------------------------asignacion------------------------------------------------
 
@@ -410,7 +429,24 @@ def p_instBreak(t):
     'instBreak : TKN_BREAK'
     t[0] = Break(t.lineno(1), get_column(input, t.slice[1]))
 
+#--------------------------------------------------instFor---------------------------------------------------------------
+def p_instFor(t):
+    'instFor : TKN_FOR TKN_PARIZQ inicializacionFor TKN_PTCOMA expresion TKN_PTCOMA actualizacionFor TKN_PARDER TKN_LLAVEIZQ instrucciones TKN_LLAVEDER'
+    t[0] = For(t.lineno(1), get_column(input, t.slice[1]), t[3], t[5],t[7], t[10] )
 
+def p_inicializacionFor(t):
+    '''
+    inicializacionFor : asignacion
+                     | declararVar
+    '''
+    t[0] = t[1]
+
+def p_actualizacionFor(t):
+    '''
+    actualizacionFor : incrementoDecremento
+                    | asignacion
+    '''
+    t[0] = t[1]
 #----------------------------Se ejecuta el analisis sintactico---------------------------------
 import Analizador.ply.yacc as yacc
 parser = yacc.yacc()
