@@ -30,6 +30,7 @@ class For(Instruccion):
 
             #la condicion tiene que ser booleana
             if self.Expresioncondicion.tipo == TIPO.BOOLEANO:
+                
                 # Si la condicion es verdadera ingresa al bucle, de lo contrario sale con un break
                 if bool(condicion) == True:  
                     #creamos un nuevo entorno
@@ -50,7 +51,7 @@ class For(Instruccion):
                     
                     actualizar = self.actualizacion.interpretar(tree, table)
                     if isinstance(actualizar, Excepcion): 
-                        return condicion
+                        return actualizar
 
 
                 else:
