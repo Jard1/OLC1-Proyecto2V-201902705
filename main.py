@@ -4,6 +4,7 @@ from tkinter import *
 from tkinter import ttk,scrolledtext,filedialog
 import analisisTokensEntrada as analisisTokensEntrada
 from Analizador.gramatica import ejecutarAnalisis
+from graficadorReportes import graficadorReportes
  
 #**********************************************************Funcionalidad************************************************************
  
@@ -133,9 +134,15 @@ def nuevo():
     lbArchivoValor.config(text=rutaArchivo)
 
 def ejecutar():
+    graficador = graficadorReportes()
+
+    txtConsola.delete(1.0, END)
     textoEntrada = txtInput.get(1.0,END)
-    salida = ejecutarAnalisis(textoEntrada)
+
+    salida,errores = ejecutarAnalisis(textoEntrada)
     txtConsola.insert(INSERT, salida)
+    
+    graficador.graficarTablaErrores(errores)
 
 #******************************************************INTERFAZ GRAFICA********************************************************************
 

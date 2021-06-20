@@ -7,6 +7,16 @@ class Excepcion:
         self.columna = columna
 
     def toString(self):
-        return self.tipo + " ; " + self.descripcion + " (" + str(self.fila) + "," + str(self.columna) + ")"
+        return "Error "+self.tipo + ": " + self.descripcion + " en (Linea: " + str(self.fila) + ", Col: " + str(self.columna) + ")"
 
-    
+    def getDescripcion(self):
+        return self.descripcion
+
+    def getTipo(self):
+        return self.tipo
+
+    def getFila(self):
+        return self.fila
+
+    def getColumna(self):
+        return self.columna

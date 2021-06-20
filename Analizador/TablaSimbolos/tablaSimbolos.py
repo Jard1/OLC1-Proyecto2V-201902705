@@ -52,8 +52,8 @@ class TablaSimbolos:
                     tablaActual.tabla[simbolo.id.lower()].setValor(simbolo.getValor())
                     tablaActual.tabla[simbolo.id.lower()].setTipo(simbolo.getTipo())
                     return None
-                else:
-                    return Excepcion ("El valor asignado no es compatible con el tipo de dato de la variable", "Semantico" ,simbolo.getFila(), simbolo.getColumna())
+                
+                return Excepcion ("El valor asignado no es compatible con el tipo de dato de la variable", "Semantico" ,simbolo.getFila(), simbolo.getColumna())
             else:
 
                 tablaActual = tablaActual.tablaAnterior

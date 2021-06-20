@@ -1,6 +1,0 @@
-main() {
- 	var a = 0; 
-	if(a==5-5){
-		print(" el valor de a es: " + a);
-	}
-}
