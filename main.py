@@ -144,6 +144,9 @@ def ejecutar():
     
     graficador.graficarTablaErrores(errores)
 
+def abrirReporteErrores():
+    os.system('ReporteErrores.html')
+
 #******************************************************INTERFAZ GRAFICA********************************************************************
 
 #----------------------------Ventana ROOT-------------------------------------
@@ -168,7 +171,7 @@ reportMenu = Menu(barMenu, tearoff = 0)
 reportMenu.add_command(label = "Tabla de simbolos")
 reportMenu.add_command(label = "Arbol AST")
 reportMenu.add_separator()
-reportMenu.add_command(label = "Reporte de errores")
+reportMenu.add_command(label = "Reporte de errores", command=abrirReporteErrores)
 barMenu.add_cascade(label =  "Reportes", menu = reportMenu)
 root.config(menu = barMenu)
 

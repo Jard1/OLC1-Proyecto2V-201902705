@@ -259,12 +259,6 @@ def p_instruccion(t):
     '''
     t[0] = t[1]
 
-#------------------------------------------Recuperacion de errores-------------------------------------------
-def p_instruccion_error(t):
-    'instruccion        : error TKN_PTCOMA'
-    errores.append(Excepcion("No se esperaba un " + str(t[1].value) , "Sintáctico" , t.lineno(1), get_column(input, t.slice[1])))
-    print("error en sintactico en "+str(t[1].value) )
-    t[0] = ""
 
 #--------------------------------------------Print------------------------------------------------------    
 def p_instPrint(t):
@@ -492,6 +486,12 @@ def p_instListaCasos_instDefault(t):
     '''
     t[0] = t[1]
 
+#------------------------------------------Recuperacion de errores-------------------------------------------
+def p_instruccion_error(t):
+    'instruccion        : error TKN_PTCOMA'
+    errores.append(Excepcion("No se esperaba un " + str(t[1].value) , "Sintáctico" , t.lineno(1), get_column(input, t.slice[1])))
+    print("error en sintactico en "+str(t[1].value) )
+    t[0] = ""
 #----------------------------Se ejecuta el analisis sintactico---------------------------------
 import Analizador.ply.yacc as yacc
 parser = yacc.yacc()
@@ -588,4 +588,4 @@ def ejecutarAnalisis(entrada):
                 YaHayMain = True
 
     print(ast.getConsola())
-    return ast.getConsola(), errores
+    return ast.getConsola(), ast.getExcepciones()
