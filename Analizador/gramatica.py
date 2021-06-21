@@ -204,6 +204,9 @@ from Analizador.Instrucciones.While import While
 from Analizador.Instrucciones.Break import Break
 from Analizador.Instrucciones.For import For
 from Analizador.Instrucciones.incrementoDecremento import incrementoDecremento
+from Analizador.Instrucciones.Case import Case
+from Analizador.Instrucciones.Default import Default
+from Analizador.Instrucciones.Switch import Switch 
 from Analizador.Instrucciones.Main import Main
 
 from Analizador.Expresiones.Primitivos import Primitivos
@@ -247,7 +250,7 @@ def p_finalizacion(t): #esto es porque el punto y coma es opcional
 def p_instruccion(t):
     '''
     instruccion : instPrint finalizacion
-                | expresion finalizacion 
+                
                 | declararVar finalizacion
                 | asignacion finalizacion
                 | instIF
@@ -256,7 +259,9 @@ def p_instruccion(t):
                 | instMain
                 | instFor
                 | instSwitch
+                | incrementoDecremento finalizacion
     '''
+    #| expresion finalizacion 
     t[0] = t[1]
 
 
@@ -382,6 +387,7 @@ def p_expresion_incrementoDecremento(t):
 def p_incrementoDecrementoMas(t):
     'incrementoDecremento : ID TKN_INCREMENTO'
     t[0] = incrementoDecremento(t.lineno(2), get_column(input, t.slice[2]), t[1], OperadorAritmetico.INCREMENTO)
+    
 
 def p_incrementoDecrementoNenos(t):
     'incrementoDecremento : ID TKN_DECREMENTO'
@@ -450,45 +456,55 @@ def p_actualizacionFor(t):
 #----------------------------------------------------instSwitch-------------------------------------------------------
 
 def p_instSwitchSimple(t):
-    '''
-    instSwitch : TKN_SWITCH TKN_PARIZQ expresion TKN_PARDER TKN_LLAVEIZQ instListaCases TKN_LLAVEDER
-    '''
-    t[0] = t[1]
+    'instSwitch : TKN_SWITCH TKN_PARIZQ expresion TKN_PARDER TKN_LLAVEIZQ instListaCases TKN_LLAVEDER'
+    #----fila, columna, expresionPorEvaluar, listaCases, default
+    
+    t[0] = Switch(t.lineno(1), get_column(input, t.slice[1]), t[3], t[6], None)
 
 def p_instSwitchCompleto(t):
-    '''
-    instSwitch : TKN_SWITCH TKN_PARIZQ expresion TKN_PARDER TKN_LLAVEIZQ instListaCases instDefault TKN_LLAVEDER
-    '''
-    t[0] = t[1]
+    'instSwitch : TKN_SWITCH TKN_PARIZQ expresion TKN_PARDER TKN_LLAVEIZQ instListaCases instDefault TKN_LLAVEDER'
+    
+    t[0] = Switch(t.lineno(1), get_column(input, t.slice[1]), t[3], t[6], t[7])
 
 def p_instSwitchSoloDefault(t):
-    '''
-    instSwitch : TKN_SWITCH TKN_PARIZQ expresion TKN_PARDER TKN_LLAVEIZQ instDefault TKN_LLAVEDER
-    '''
-    t[0] = t[1]
+    'instSwitch : TKN_SWITCH TKN_PARIZQ expresion TKN_PARDER TKN_LLAVEIZQ instDefault TKN_LLAVEDER'
+    
+    t[0] = Switch(t.lineno(1), get_column(input, t.slice[1]), t[3], None, t[7])
 
 def p_instSwich_instListaCasos(t):
-    '''
-    instListaCases : instListaCases instCase
-                    | instCase
-    '''
-    t[0] = t[1]
+    'instListaCases : instListaCases instCase'
+    
+    if t[2] != "":
+        t[1].append(t[2]) 
+    t[0] = t[1] 
+
+def p_instListaCases_instCase(t):
+    'instListaCases : instCase'
+    
+    if t[1] == "":
+        t[0] = []
+    else:    
+        t[0] = [t[1]]
 
 def p_instListaCasos_instCase(t):
-    '''
-    instCase : TKN_CASE expresion TKN_DOSPUNTOS instrucciones
-    '''
-    t[0] = t[1]
+    'instCase : TKN_CASE expresion TKN_DOSPUNTOS instrucciones'
+
+    if t[4] == "":
+        t[0] = ""
+    else:
+        t[0] = Case(t.lineno(1), get_column(input, t.slice[1]),t[2],t[4])
+
 
 def p_instListaCasos_instDefault(t):
-    '''
-    instDefault : TKN_DEFAULT TKN_DOSPUNTOS instrucciones
-    '''
-    t[0] = t[1]
+    'instDefault : TKN_DEFAULT TKN_DOSPUNTOS instrucciones'
+
+    t[0] = Default(t.lineno(1), get_column(input, t.slice[1]),t[3])
+
 
 #------------------------------------------Recuperacion de errores-------------------------------------------
 def p_instruccion_error(t):
     'instruccion        : error TKN_PTCOMA'
+    
     errores.append(Excepcion("No se esperaba un " + str(t[1].value) , "Sintáctico" , t.lineno(1), get_column(input, t.slice[1])))
     print("error en sintactico en "+str(t[1].value) )
     t[0] = ""

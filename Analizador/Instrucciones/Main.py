@@ -19,11 +19,11 @@ class Main(Instruccion):
         # realizar las instrucciones deseadas, que estan guardadas en el ast
         for instruccion in self.instrucciones:
             value = instruccion.interpretar(tree,nuevaTabla)
-        if isinstance(value, Excepcion) :
-            tree.getExcepciones().append(value)
-            tree.updateConsole(value.toString())
-        if isinstance(value, Break) :
-            error =  Excepcion("No se puede declarar un break fuera de un ciclo","Semantico", instruccion.fila,instruccion.columna)
-            tree.getExcepciones().append(error)
-            tree.updateConsole(error.toString())
-            #break
+            if isinstance(value, Excepcion) :
+                tree.getExcepciones().append(value)
+                tree.updateConsole(value.toString())
+            if isinstance(value, Break) :
+                error =  Excepcion("No se puede declarar un break fuera de un ciclo","Semantico", instruccion.fila,instruccion.columna)
+                tree.getExcepciones().append(error)
+                tree.updateConsole(error.toString())
+                #break
