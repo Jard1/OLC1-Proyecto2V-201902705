@@ -3,6 +3,8 @@ from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
 from Analizador.Instrucciones.Break import Break
+from Analizador.Instrucciones.Continue import Continue
+
 
 class For(Instruccion):
 
@@ -44,11 +46,12 @@ class For(Instruccion):
                             #si hay un error , se muestra en consola
                             tree.getExcepciones().append(result)
                             tree.updateConsole(result.toString())
-                        
                         if isinstance(result, Break): 
                             #Retorna none para salirse del bucle
                             return None
-                    
+                        if isinstance(result,Continue):
+                            break
+                        
                     actualizar = self.actualizacion.interpretar(tree, table)
                     if isinstance(actualizar, Excepcion): 
                         return actualizar

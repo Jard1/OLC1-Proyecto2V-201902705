@@ -3,6 +3,7 @@ from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
 from Analizador.Instrucciones.Break import Break
+from Analizador.Instrucciones.Continue import Continue
 
 class While(Instruccion):
 
@@ -39,6 +40,8 @@ class While(Instruccion):
                         if isinstance(result, Break): 
                             #Retorna none para salirse del bucle
                             return None
+                        if isinstance(result,Continue):
+                            break
                 else:
                     break
             else:

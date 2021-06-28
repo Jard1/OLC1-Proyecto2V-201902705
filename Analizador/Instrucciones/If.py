@@ -2,6 +2,7 @@ from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
 from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.Instrucciones.Break import Break
+from Analizador.Instrucciones.Continue import Continue
 from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
 
 class If(Instruccion):
@@ -36,7 +37,7 @@ class If(Instruccion):
                     if isinstance(result, Excepcion) :
                         tree.getExcepciones().append(result)
                         tree.updateConsole(result.toString())
-                    if isinstance(result, Break): 
+                    if isinstance(result, Break) or isinstance(result, Continue): 
                         #Retorna el valor de break, para que este llegue al bucle y alli haga break
                         return result
 
@@ -54,7 +55,7 @@ class If(Instruccion):
                         if isinstance(result, Excepcion) :
                             tree.getExcepciones().append(result)
                             tree.updateConsola(result.toString())
-                        if isinstance(result, Break): 
+                        if isinstance(result, Break) or isinstance(result, Continue): 
                             #Retorna el valor de break, para que este llegue al bucle y alli haga break
                             return result
                 elif self.elseIf != None:
@@ -62,7 +63,7 @@ class If(Instruccion):
                     result = self.elseIf.interpretar(tree, table)
                     if isinstance(result, Excepcion): 
                         return result
-                    if isinstance(result, Break): 
+                    if isinstance(result, Break) or isinstance(result, Continue): 
                         #Retorna el valor de break, para que este llegue al bucle y alli haga break
                         return result
 

@@ -202,6 +202,7 @@ from Analizador.Instrucciones.If import If
 from Analizador.Instrucciones.imprimir import Imprimir
 from Analizador.Instrucciones.While import While
 from Analizador.Instrucciones.Break import Break
+from Analizador.Instrucciones.Continue import Continue
 from Analizador.Instrucciones.For import For
 from Analizador.Instrucciones.incrementoDecremento import incrementoDecremento
 from Analizador.Instrucciones.Case import Case
@@ -256,6 +257,7 @@ def p_instruccion(t):
                 | instIF
                 | instWhile
                 | instBreak finalizacion
+                | instContinue finalizacion
                 | instMain
                 | instFor
                 | instSwitch
@@ -433,6 +435,11 @@ def p_instWhile(t):
 def p_instBreak(t):
     'instBreak : TKN_BREAK'
     t[0] = Break(t.lineno(1), get_column(input, t.slice[1]))
+
+#------------------------------------------------------instContinue-----------------------------------------------------
+def p_instContinue(t):
+    'instContinue : TKN_CONTINUE'
+    t[0] = Continue(t.lineno(1), get_column(input, t.slice[1]))
 
 #--------------------------------------------------instFor---------------------------------------------------------------
 def p_instFor(t):

@@ -84,11 +84,17 @@ def llenar_lineas( text, lineas):
 
 def actualizar_lineas_texto(event):
     analisis_formato_entrada()
+    if event.keycode ==9:
+        texto_actual = txtInput.get('1.0','end')
+        lineas = texto_actual.count('\n',None)
+        llenar_lineas(lineasCodigo,lineas)
+
+def actualizar_lineas(event):
     texto_actual = txtInput.get('1.0','end')
     lineas = texto_actual.count('\n',None)
     llenar_lineas(lineasCodigo,lineas)
 
-def actualizar_lineas(event):
+def actualizar_lineas_inicial():
     texto_actual = txtInput.get('1.0','end')
     lineas = texto_actual.count('\n',None)
     llenar_lineas(lineasCodigo,lineas)
@@ -110,6 +116,7 @@ def abrirArchivo():
 
         lbArchivoValor.config(text=rutaArchivo)
         analisis_formato_entrada()
+        actualizar_lineas_inicial()
 
 def guardarComo():    
     global rutaArchivo
@@ -222,6 +229,7 @@ txtInput = tk.Text(FrameInput, bg = "#1e1e1e", fg="white", insertbackground='whi
 inputInicial = "#ejemplo de comentario\nmain() {\n \tvar a = 0; \n\tif(a==5-5){\n\t\tprint(\" el valor de a es: \" + a);\n\t}\n}"
 txtInput.insert(INSERT, inputInicial)
 analisis_formato_entrada()
+actualizar_lineas_inicial()
 
 lineasCodigo['yscrollcommand'] = scroll_editor.set
 txtInput['yscrollcommand'] = scroll_editor.set
@@ -237,6 +245,7 @@ scroll_editor.grid(row=0,column=2,sticky=tk.N+tk.S)
 scroll_editor_horizontal.grid(row=2,column=0,columnspan=3,sticky=tk.W+tk.E)
 
 txtInput.bind('<Any-KeyPress>',actualizar_lineas)
+#txtInput.bind('<Any-KeyRelease>',actualizar_lineas)
 txtInput.bind('<Any-KeyRelease>',actualizar_lineas_texto)
 txtInput.bind('<MouseWheel>',sincronizar_lineas)
 txtInput.grid(row = 0, column = 1) #pady = 0, padx= 0
