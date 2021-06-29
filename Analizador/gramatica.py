@@ -34,6 +34,7 @@ reservadas = {
     'for' : 'TKN_FOR',
     'continue' : 'TKN_CONTINUE',
 
+    'func' : 'TKN_FUNC',
     'void' : 'TKN_VOID',
     'return' : 'TKN_RETURN',
 
@@ -209,6 +210,8 @@ from Analizador.Instrucciones.Case import Case
 from Analizador.Instrucciones.Default import Default
 from Analizador.Instrucciones.Switch import Switch 
 from Analizador.Instrucciones.Main import Main
+from Analizador.Instrucciones.Funcion import Funcion
+from Analizador.Instrucciones.LlamadaFuncion import LlamadaFuncion
 
 from Analizador.Expresiones.Primitivos import Primitivos
 from Analizador.Expresiones.Aritmetica import Aritmetica
@@ -259,6 +262,8 @@ def p_instruccion(t):
                 | instBreak finalizacion
                 | instContinue finalizacion
                 | instMain
+                | instFuncion
+                | instLlamadaFuncion finalizacion
                 | instFor
                 | instSwitch
                 | incrementoDecremento finalizacion
@@ -507,6 +512,15 @@ def p_instListaCasos_instDefault(t):
 
     t[0] = Default(t.lineno(1), get_column(input, t.slice[1]),t[3])
 
+#-------------------------------------------------------instFuncion----------------------------------------------------------------
+
+def p_instFuncion(t):
+    'instFuncion : TKN_FUNC ID TKN_PARIZQ TKN_PARDER TKN_LLAVEIZQ instrucciones TKN_LLAVEDER'
+    t[0] = Funcion(t.lineno(1), get_column(input, t.slice[1]),t[2],t[6])
+
+def p_instLlamadaFuncion(t):
+    'instLlamadaFuncion : ID TKN_PARIZQ TKN_PARDER'
+    t[0] = LlamadaFuncion(t.lineno(1), get_column(input, t.slice[1]),t[1])
 
 #------------------------------------------Recuperacion de errores-------------------------------------------
 def p_instruccion_error(t):
@@ -534,10 +548,9 @@ def parse(inp):
     input = inp
     return parser.parse(inp)
 
-#----------------------------------------------------------------------------------------------------------------------------------------
-
-#f = open("./entrada.txt", "r")
-#entrada = f.read()
+#******************************************************************************************************************************************
+#*                                                             Analisis                                                                   *
+#******************************************************************************************************************************************
 
 from Analizador.TablaSimbolos.ArbolAST import Arbol
 from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
@@ -558,11 +571,16 @@ def ejecutarAnalisis(entrada):
 
     # realizar las instrucciones deseadas, que estan guardadas en el ast
 
-    #------------------------------Primera pasada(solo para ver varaibles y declaraciones)----------------------------------------------
+    #--------------------------------Primera pasada(ver varaibles, declaraciones y guardar funciones)-----------------------------------------
+    
     if ast.getInstrucciones() != None:
         for instruccion in ast.getInstrucciones():
             #afuera del main, solo se permiten declaraciones y asignaciones
-            if isinstance(instruccion,Declaracion) or isinstance(instruccion,Asignacion):
+            if isinstance(instruccion, Funcion):
+                #guardamos la funcion en el arbol
+                ast.pushFuncion(instruccion)
+            elif isinstance(instruccion,Declaracion) or isinstance(instruccion,Asignacion) or isinstance(instruccion,incrementoDecremento):
+                
                 value = instruccion.interpretar(ast,TSGlobal)
                 if isinstance(value, Excepcion) :
                     ast.getExcepciones().append(value)
@@ -573,11 +591,12 @@ def ejecutarAnalisis(entrada):
                     ast.updateConsole(error.toString())
                     #break
             elif  not isinstance(instruccion,Main):
+                
                 error =  Excepcion("Solo se pueden declarar o asignar variables afuera de las funciones","Semantico", instruccion.fila,instruccion.columna)
                 ast.getExcepciones().append(error)
                 ast.updateConsole(error.toString())
 
-    #------------------------------------Segunta pasada, solo para contar cuantos main vienen------------------------------------------
+    #------------------------------------Segunda pasada, solo para contar cuantos main vienen--------------------------------------------------
     contMain = 0
     if ast.getInstrucciones() != None:
         for instruccion in ast.getInstrucciones():
@@ -608,7 +627,7 @@ def ejecutarAnalisis(entrada):
                     ast.getExcepciones().append(err)
                     ast.updateConsole(err.toString())
                     break
-                YaHayMain = True
 
     print(ast.getConsola())
+
     return ast.getConsola(), ast.getExcepciones()

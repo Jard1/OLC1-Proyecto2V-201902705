@@ -5,6 +5,7 @@ class Arbol:
         
         self.TSglobal = None #tabla de simbolos
         self.excepciones = []
+        self.funciones = []
         self.consola = ""
 
         self.instrucciones = instrucciones
@@ -28,7 +29,7 @@ class Arbol:
         return self.TSglobal
 
     def getInstrucciones(self):
-        return self.instrucciones #clase abstracta
+        return self.instrucciones 
 
     def setInstrucciones(self, instrucciones):
         self.instrucciones = instrucciones
@@ -36,3 +37,14 @@ class Arbol:
     def setTSglobal(self, TSglobal):
         self.TSglobal = TSglobal
         
+    def getListaFunciones(self):
+        return self.funciones
+
+    def getFuncion(self, nombre):
+        for funcion in self.funciones:
+            if funcion.nombre == nombre:
+                return funcion
+        return None
+
+    def pushFuncion(self, funcion):
+        self.funciones.append(funcion)
