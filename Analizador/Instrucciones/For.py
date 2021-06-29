@@ -4,6 +4,7 @@ from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
 from Analizador.Instrucciones.Break import Break
 from Analizador.Instrucciones.Continue import Continue
+from Analizador.Instrucciones.Asignacion import Asignacion
 
 
 class For(Instruccion):
@@ -19,14 +20,22 @@ class For(Instruccion):
 
     def interpretar(self, tree, table):
 
-        iniciarVariable = self.inicializacion.interpretar(tree,table)
+        if isinstance(self.inicializacion, Asignacion): 
+
+            iniciarVariable = self.inicializacion.interpretar(tree,table)
+
+            if isinstance(iniciarVariable, Excepcion): 
+                return iniciarVariable
         
-        if isinstance(iniciarVariable, Excepcion): 
-            return iniciarVariable
+        tablaFor = TablaSimbolos(table)
+        declaracion = self.inicializacion.interpretar(tree, tablaFor)
+
+        if isinstance(declaracion, Excepcion): 
+            return declaracion
+
         while True:
             
-            condicion = self.Expresioncondicion.interpretar(tree, table)
-
+            condicion = self.Expresioncondicion.interpretar(tree, tablaFor)
             if isinstance(condicion, Excepcion): 
                 return condicion
 
@@ -36,7 +45,7 @@ class For(Instruccion):
                 # Si la condicion es verdadera ingresa al bucle, de lo contrario sale con un break
                 if bool(condicion) == True:  
                     #creamos un nuevo entorno
-                    nuevaTabla = TablaSimbolos(table)
+                    nuevaTabla = TablaSimbolos(tablaFor)
                     
                     #ejecutamos cada instruccion que venga dentro del while
                     for instruccion in self.instrucciones:
@@ -51,11 +60,10 @@ class For(Instruccion):
                             return None
                         if isinstance(result,Continue):
                             break
-                        
-                    actualizar = self.actualizacion.interpretar(tree, table)
+                            
+                    actualizar = self.actualizacion.interpretar(tree, tablaFor)
                     if isinstance(actualizar, Excepcion): 
                         return actualizar
-
 
                 else:
                     break
