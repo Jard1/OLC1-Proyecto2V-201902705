@@ -4,6 +4,8 @@ from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.TablaSimbolos.simbolo import Simbolo
 from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
 from Analizador.Instrucciones.Break import Break
+from Analizador.Instrucciones.Continue import Continue
+from Analizador.Instrucciones.Return import Return
 
 class Main(Instruccion):
 
@@ -27,3 +29,11 @@ class Main(Instruccion):
                 tree.getExcepciones().append(error)
                 tree.updateConsole(error.toString())
                 #break
+            if isinstance(value,Continue):
+                error =  Excepcion("No se puede declarar un continue fuera de un ciclo","Semantico", instruccion.fila,instruccion.columna)
+                tree.getExcepciones().append(error)
+                tree.updateConsole(error.toString())
+            if isinstance(value, Return):
+                error =  Excepcion("El metodo main no puede retornar ningun valor","Semantico", instruccion.fila,instruccion.columna)
+                tree.getExcepciones().append(error)
+                tree.updateConsole(error.toString())

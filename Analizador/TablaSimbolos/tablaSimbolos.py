@@ -15,7 +15,6 @@ class TablaSimbolos:
     def getTabla(self, id):
         
         tablaActual = self      
-
         #buscamos en todas las tablas enlazadas a la variable
         while tablaActual != None:
             if id in tablaActual.tabla :

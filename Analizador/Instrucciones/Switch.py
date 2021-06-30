@@ -1,6 +1,8 @@
 from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.Instrucciones.Break import Break
 from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
+from Analizador.Instrucciones.Continue import Continue
+from Analizador.Instrucciones.Return import Return
 
 class Switch(Instruccion):
 
@@ -35,6 +37,10 @@ class Switch(Instruccion):
                             tree.getExcepciones().append(result)
                         if isinstance(result, Break): 
                             return None 
+                        if isinstance(result,Continue):
+                            break
+                        if isinstance(result, Return):
+                            return result
             
         #-------------------------Instrucciones del default-------------------------------
         if self.default != None:

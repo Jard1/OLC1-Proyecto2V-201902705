@@ -5,16 +5,15 @@
 from Analizador.TablaSimbolos.Excepcion import Excepcion
 errores = []
 
-# --- tipos de datos
-tiposDatos = {
+
+reservadas = {
+    #------------tipos de datos
     'int' : 'TKN_INT',
     'double' : 'TKN_DOUBLE',
     'boolean' : 'TKN_BOOLEAN',
     'char' : 'TKN_CHAR',
     'string' : 'TKN_STRING',
-}
 
-reservadas = {
     'null' : 'TKN_NULL',
     'new' : 'TKN_NEW',
     'var' : 'TKN_VAR',
@@ -66,7 +65,7 @@ tokens = [
 
     'ENTERO', 'DECIMAL', 'ID', 'CADENA', 'CHARACTER'
 
-] + list(tiposDatos.values()) + list(reservadas.values())
+]+ list(reservadas.values())
 
 #--------------------------operadores aritmeticos
 t_TKN_MAS       = r'\+'
@@ -212,6 +211,7 @@ from Analizador.Instrucciones.Switch import Switch
 from Analizador.Instrucciones.Main import Main
 from Analizador.Instrucciones.Funcion import Funcion
 from Analizador.Instrucciones.LlamadaFuncion import LlamadaFuncion
+from Analizador.Instrucciones.Return import Return
 
 from Analizador.Expresiones.Primitivos import Primitivos
 from Analizador.Expresiones.Aritmetica import Aritmetica
@@ -248,7 +248,7 @@ def p_finalizacion(t): #esto es porque el punto y coma es opcional
     finalizacion : TKN_PTCOMA
                  | 
     '''
-    t[0]=None
+    t[0] = None
 #--------------------------------------------Instruccion----------------------------------------------
 
 def p_instruccion(t):
@@ -267,6 +267,7 @@ def p_instruccion(t):
                 | instFor
                 | instSwitch
                 | incrementoDecremento finalizacion
+                | instReturn finalizacion
     '''
     #| expresion finalizacion 
     t[0] = t[1]
@@ -514,13 +515,73 @@ def p_instListaCasos_instDefault(t):
 
 #-------------------------------------------------------instFuncion----------------------------------------------------------------
 
-def p_instFuncion(t):
+def p_instFuncion_sinParametros(t):
     'instFuncion : TKN_FUNC ID TKN_PARIZQ TKN_PARDER TKN_LLAVEIZQ instrucciones TKN_LLAVEDER'
-    t[0] = Funcion(t.lineno(1), get_column(input, t.slice[1]),t[2],t[6])
+    t[0] = Funcion(t.lineno(1), get_column(input, t.slice[1]),t[2],t[6], [])
 
-def p_instLlamadaFuncion(t):
-    'instLlamadaFuncion : ID TKN_PARIZQ TKN_PARDER'
-    t[0] = LlamadaFuncion(t.lineno(1), get_column(input, t.slice[1]),t[1])
+def p_instFuncion_conParametros(t):
+    'instFuncion : TKN_FUNC ID TKN_PARIZQ parametros TKN_PARDER TKN_LLAVEIZQ instrucciones TKN_LLAVEDER'
+    t[0] = Funcion(t.lineno(1), get_column(input, t.slice[1]),t[2],t[7], t[4])
+
+def p_instFuncion_parametros(t):
+    'parametros : parametros TKN_COMA parametro'
+    t[1].append(t[3]) #agregamos la lista de parametros
+    t[0] = t[1]
+
+def p_instFuncion_parametro(t):
+    'parametros : parametro'
+    t[0] = [t[1]]
+
+def p_parametro(t) :
+    'parametro : tipoDato ID'
+    t[0] = {'tipo':t[1],'identificador':t[2]}
+
+def p_tipoDato(t):
+    ''' tipoDato : TKN_INT
+        | TKN_DOUBLE
+        | TKN_BOOLEAN
+        | TKN_CHAR
+        | TKN_STRING 
+    '''
+    if t[1].lower() == 'int':
+        t[0] = TIPO.ENTERO
+    elif t[1].lower() == 'double':
+        t[0] = TIPO.DECIMAL
+    elif t[1].lower() == 'boolean':
+        t[0] = TIPO.BOOLEANO
+    elif t[1].lower() == 'char':
+        t[0] = TIPO.CHARACTER
+    elif t[1].lower() == 'string':
+        t[0] = TIPO.CADENA
+
+#--------------------------------------Llamada a funcion---------------------------------------------
+
+def p_instLlamadaFuncionVacia(t):
+    '''instLlamadaFuncion : ID TKN_PARIZQ TKN_PARDER'''
+    t[0] = LlamadaFuncion(t.lineno(1), get_column(input, t.slice[1]),t[1], [])
+
+def p_instLlamadaFuncionParametros(t):
+    '''instLlamadaFuncion : ID TKN_PARIZQ parametrosLlamada TKN_PARDER'''
+    t[0] = LlamadaFuncion(t.lineno(1), get_column(input, t.slice[1]),t[1], t[3])
+
+def p_parametrosLlamada(t):
+    '''parametrosLlamada : parametrosLlamada TKN_COMA UnparametroLlamada'''
+    t[1].append(t[3])
+    t[0] = t[1]
+
+def p_parametrosLlamadaSolo(t):
+    '''parametrosLlamada : UnparametroLlamada'''
+    t[0] = [t[1]]
+
+def p_parametro_Llamada(t):
+    '''UnparametroLlamada : expresion'''
+    t[0] = t[1]
+
+#-----------------------------------------------------------instReturn------------------------------------------------------------
+
+def p_instReturn(t):
+    '''instReturn : TKN_RETURN expresion'''
+    t[0] = Return(t.lineno(1), get_column(input, t.slice[1]),t[2])
 
 #------------------------------------------Recuperacion de errores-------------------------------------------
 def p_instruccion_error(t):

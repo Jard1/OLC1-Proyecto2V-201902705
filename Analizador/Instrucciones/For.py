@@ -5,7 +5,7 @@ from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
 from Analizador.Instrucciones.Break import Break
 from Analizador.Instrucciones.Continue import Continue
 from Analizador.Instrucciones.Asignacion import Asignacion
-
+from Analizador.Instrucciones.Return import Return
 
 class For(Instruccion):
 
@@ -59,7 +59,9 @@ class For(Instruccion):
                             #Retorna none para salirse del bucle
                             return None
                         if isinstance(result,Continue):
-                            break
+                            break   
+                        if isinstance(result, Return):
+                            return result
                             
                     actualizar = self.actualizacion.interpretar(tree, tablaFor)
                     if isinstance(actualizar, Excepcion): 

@@ -2,6 +2,7 @@ from Analizador.ply import lex as lex
 import re
 
 reserved = {
+    
     'int' : 'TKN_INT',
     'double' : 'TKN_DOUBLE',
     'boolean' : 'TKN_BOOLEAN',
@@ -30,6 +31,7 @@ reserved = {
     'read' : 'TKN_READ',
     'tolower' : 'TKN_TOLOWER',
     'print' : 'TKN_PRINT',
+    'func' : 'TKN_FUNC',
 
     'toupper' : 'TKN_TO_UPPER',
     'length' : 'TKN_LENGTH',

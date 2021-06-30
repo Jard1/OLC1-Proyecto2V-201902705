@@ -4,6 +4,7 @@ from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
 from Analizador.Instrucciones.Break import Break
 from Analizador.Instrucciones.Continue import Continue
+from Analizador.Instrucciones.Return import Return
 
 class While(Instruccion):
 
@@ -42,6 +43,8 @@ class While(Instruccion):
                             return None
                         if isinstance(result,Continue):
                             break
+                        if isinstance(result, Return):
+                            return result
                 else:
                     break
             else:

@@ -7,18 +7,22 @@ from Analizador.gramatica import ejecutarAnalisis
 from graficadorReportes import graficadorReportes
  
 #**********************************************************Funcionalidad************************************************************
- 
+FilaCount = 1
+ColumnaCount = 1
+rutaArchivo = ""
+
 def analisis_formato_entrada():
     
     ultima_posicion = txtInput.index('insert')
     ultima_posicion_scroll = scroll_editor.get()[0]
     texto_actual = txtInput.get('1.0','end')
-    saltos = texto_actual.count('\n',None)
+    saltos = texto_actual.count('\n',None)-1
     
     txtInput.delete('1.0','end')
     analisisTokensEntrada.entrada = texto_actual
     analisisTokensEntrada.lexer.input(texto_actual)
     contador_saltos = 0
+
     for t in analisisTokensEntrada.lexer:
         token_info = analisisTokensEntrada.ultimo_token
         if token_info[0] == '\n':
@@ -30,9 +34,6 @@ def analisis_formato_entrada():
     txtInput.mark_set('insert', ultima_posicion)
     txtInput.yview_moveto(ultima_posicion_scroll)
 
-FilaCount = 1
-ColumnaCount = 1
-rutaArchivo = ""
 def accion_scroll(*L):
     operacion = L[0]
     lineas = L[1]
@@ -93,11 +94,8 @@ def actualizar_lineas(event):
     texto_actual = txtInput.get('1.0','end')
     lineas = texto_actual.count('\n',None)
     llenar_lineas(lineasCodigo,lineas)
+    analisis_formato_entrada()
 
-def actualizar_lineas_inicial():
-    texto_actual = txtInput.get('1.0','end')
-    lineas = texto_actual.count('\n',None)
-    llenar_lineas(lineasCodigo,lineas)
 
 def sincronizar_lineas(event):
     lineasCodigo.yview_moveto(scroll_editor.get()[0])
@@ -116,7 +114,7 @@ def abrirArchivo():
 
         lbArchivoValor.config(text=rutaArchivo)
         analisis_formato_entrada()
-        actualizar_lineas_inicial()
+        actualizar_lineas(None)
 
 def guardarComo():    
     global rutaArchivo
@@ -214,22 +212,21 @@ FrameInput = Frame(FramePrincipal)
 FrameInput.config(bg = "#3c3c3c", width = 80, height = 35)
 FrameInput.grid(row = 0, column = 0)
 
-#------------------------------------------------INPUT ----------------------------------------------------------
+#-----------------------------------------------------------INPUT ----------------------------------------------------------
 
 scroll_editor = Scrollbar(FrameInput,orient=tk.VERTICAL,command=accion_scroll)
 scroll_editor_horizontal = Scrollbar(FrameInput,orient=tk.HORIZONTAL,command=accion_scroll_horizontal)
 
-
 lineasCodigo = tk.Text(FrameInput,bg='white',width=3, height =35)
-llenar_lineas(lineasCodigo,0)
 lineasCodigo.grid(row = 0, column = 0)
 
-txtInput = tk.Text(FrameInput, bg = "#1e1e1e", fg="white", insertbackground='white', width = 80, height = 35)#width = 80, height = 35,
+txtInput = scrolledtext.ScrolledText(FrameInput, wrap=NONE, undo=True, width = 80, height = 35, bg = "#1e1e1e", fg="white", insertbackground='white')
+txtInput.config(xscrollcommand=scroll_editor_horizontal.set)
 
 inputInicial = "#ejemplo de comentario\nmain() {\n \tvar a = 0; \n\tif(a==5-5){\n\t\tprint(\" el valor de a es: \" + a);\n\t}\n}"
 txtInput.insert(INSERT, inputInicial)
 analisis_formato_entrada()
-actualizar_lineas_inicial()
+actualizar_lineas(None)
 
 lineasCodigo['yscrollcommand'] = scroll_editor.set
 txtInput['yscrollcommand'] = scroll_editor.set
@@ -244,10 +241,10 @@ txtInput.tag_config('normal',foreground='white')
 scroll_editor.grid(row=0,column=2,sticky=tk.N+tk.S)
 scroll_editor_horizontal.grid(row=2,column=0,columnspan=3,sticky=tk.W+tk.E)
 
-txtInput.bind('<Any-KeyPress>',actualizar_lineas)
-#txtInput.bind('<Any-KeyRelease>',actualizar_lineas)
-txtInput.bind('<Any-KeyRelease>',actualizar_lineas_texto)
-txtInput.bind('<MouseWheel>',sincronizar_lineas)
+txtInput.bind('<Any-KeyRelease>',actualizar_lineas)
+#txtInput.bind('<Any-KeyPress>',actualizar_lineas_texto)
+#txtInput.bind('<Any-KeyRelease>',actualizar_lineas_texto)
+#txtInput.bind('<MouseWheel>',sincronizar_lineas)
 txtInput.grid(row = 0, column = 1) #pady = 0, padx= 0
 
 #-----------------------------------------------------OUTPUT---------------------------------------------------------
