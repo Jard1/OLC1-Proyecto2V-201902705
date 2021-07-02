@@ -21,7 +21,8 @@ class LlamadaFuncion(Instruccion):
         if funcion == None:
             return Excepcion("La funcion " + self.nombre+" No ha sido declarada","Semantico", self.fila, self.columna)
 
-        nuevaTabla = TablaSimbolos(table)
+        nuevaTabla = TablaSimbolos(tree.getTSGlobal()) #se usa la tabla global para soportar la recursividad
+
         #-------------------------------------------------parametros--------------------------------------------------------
         #verificamos si es la cantidad de parametros esperada
         if len(funcion.parametros) == len(self.parametros):
@@ -29,7 +30,7 @@ class LlamadaFuncion(Instruccion):
             #recorremos los parametros
             for expresion in self.parametros:
                 
-                valorExpresion = expresion.interpretar(tree, nuevaTabla)
+                valorExpresion = expresion.interpretar(tree, table)
                 #si es un error
                 if isinstance(valorExpresion, Excepcion): 
                     return valorExpresion

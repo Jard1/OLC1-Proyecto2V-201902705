@@ -273,12 +273,12 @@ def p_instruccion(t):
     t[0] = t[1]
 
 
-#--------------------------------------------Print------------------------------------------------------    
+#-----------------------------------------------------Print--------------------------------------------------------------------    
 def p_instPrint(t):
     'instPrint : TKN_PRINT TKN_PARIZQ expresion TKN_PARDER'
     t[0] = Imprimir(t.lineno(1), get_column(input, t.slice[1]),t[3])   
 
-#----------------------------------------------instMain---------------------------------------------------
+#----------------------------------------------------instMain------------------------------------------------------------------
 def p_instMain(t):
     'instMain : TKN_MAIN TKN_PARIZQ TKN_PARDER TKN_LLAVEIZQ instrucciones TKN_LLAVEDER'
     t[0] = Main(t.lineno(1), get_column(input, t.slice[1]),t[5])   
@@ -286,7 +286,8 @@ def p_instMain(t):
 #def p_instMain_nada(t):
 #    'instMain : '
 #    t[0]=""
-#--------------------------------------------Expresion---------------------------------------------------
+
+#-----------------------------------------------------Expresion----------------------------------------------------------------
 def p_expresion_binaria(t):
     '''
     expresion : expresion TKN_MAS expresion
@@ -355,6 +356,9 @@ def p_expresion_agrupacion(t):
     '''
     t[0] = t[2]
 
+def p_expresion_llamada(t):
+    'expresion : instLlamadaFuncion'
+    t[0] = t[1]
 #------------------------------PRIMITIVOS---------------------------------------
 
 def p_expresion_ID(t):
