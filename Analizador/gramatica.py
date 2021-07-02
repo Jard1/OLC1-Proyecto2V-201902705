@@ -217,6 +217,8 @@ from Analizador.Expresiones.Aritmetica import Aritmetica
 from Analizador.Expresiones.Relacional import Relacional
 from Analizador.Expresiones.Logica import Logica
 from Analizador.Expresiones.Identificador import Identificador
+from Analizador.Expresiones.Read import Read
+from Analizador.Expresiones.Casteos import Casteos
 
 from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
@@ -358,6 +360,15 @@ def p_expresion_agrupacion(t):
 def p_expresion_llamada(t):
     'expresion : instLlamadaFuncion'
     t[0] = t[1]
+
+def p_expresion_read(t):
+    'expresion : TKN_READ TKN_PARIZQ TKN_PARDER'
+    t[0] = Read(t.lineno(1), get_column(input, t.slice[1]))
+
+
+def p_expresion_casteos(t):
+    'expresion : TKN_PARIZQ tipoDato TKN_PARDER expresion'
+    t[0] = Casteos(t.lineno(1), get_column(input, t.slice[1]), t[2], t[4])
 #------------------------------PRIMITIVOS---------------------------------------
 
 def p_expresion_ID(t):
