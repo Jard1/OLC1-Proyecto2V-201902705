@@ -4,14 +4,10 @@ Unused terminals:
 
     TKN_CORCHETEDER
     TKN_CORCHETEIZQ
-    TKN_LENGTH
     TKN_NEW
     TKN_PUNTO
     TKN_READ
     TKN_ROUND
-    TKN_TOLOWER
-    TKN_TO_UPPER
-    TKN_TRUNCATE
     TKN_TYPE_OF
     TKN_VOID
 
@@ -138,7 +134,6 @@ TKN_IGUAL            : 52 53
 TKN_IGUAL_IGUAL      : 28
 TKN_INCREMENTO       : 49
 TKN_INT              : 77
-TKN_LENGTH           : 
 TKN_LLAVEDER         : 21 54 55 55 56 57 60 65 66 67 72 73
 TKN_LLAVEIZQ         : 21 54 55 55 56 57 60 65 66 67 72 73
 TKN_MAIN             : 21
@@ -165,10 +160,7 @@ TKN_RETURN           : 87
 TKN_ROUND            : 
 TKN_STRING           : 81
 TKN_SWITCH           : 65 66 67
-TKN_TOLOWER          : 
-TKN_TO_UPPER         : 
 TKN_TRUE             : 46
-TKN_TRUNCATE         : 
 TKN_TYPE_OF          : 
 TKN_VAR              : 51 52
 TKN_VOID             : 

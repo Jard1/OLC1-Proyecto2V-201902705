@@ -39,7 +39,7 @@ class LlamadaFuncion(Instruccion):
                 if funcion.parametros[cont]["tipo"] == expresion.tipo:
 
                     #------------registramos los parametros como nuevas variables-------------
-                    simbolo = Simbolo(self.fila, self.columna, str(funcion.parametros[cont]['identificador']), valorExpresion , funcion.parametros[cont]['tipo'])
+                    simbolo = Simbolo(self.fila, self.columna, str(funcion.parametros[cont]['identificador']).lower(), valorExpresion , funcion.parametros[cont]['tipo'])
                     resultTabla = nuevaTabla.setTabla(simbolo)
                     if isinstance(resultTabla, Excepcion): 
                         return resultTabla

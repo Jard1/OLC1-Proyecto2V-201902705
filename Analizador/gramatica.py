@@ -38,11 +38,7 @@ reservadas = {
     'return' : 'TKN_RETURN',
 
     'read' : 'TKN_READ',
-    'tolower' : 'TKN_TOLOWER',
     'print' : 'TKN_PRINT',
-    'toupper' : 'TKN_TO_UPPER',
-    'length' : 'TKN_LENGTH',
-    'truncate' :'TKN_TRUNCATE',
 
     'round' : 'TKN_ROUND',
     'typeof' : 'TKN_TYPE_OF',
@@ -212,6 +208,9 @@ from Analizador.Instrucciones.Main import Main
 from Analizador.Instrucciones.Funcion import Funcion
 from Analizador.Instrucciones.LlamadaFuncion import LlamadaFuncion
 from Analizador.Instrucciones.Return import Return
+
+from Analizador.FuncionesNativas.ToUpper import ToUpper
+from Analizador.FuncionesNativas.ToLower import ToLower
 
 from Analizador.Expresiones.Primitivos import Primitivos
 from Analizador.Expresiones.Aritmetica import Aritmetica
@@ -629,6 +628,8 @@ def ejecutarAnalisis(entrada):
     TSGlobal = TablaSimbolos()
     ast.setTSglobal(TSGlobal)
 
+    generarFuncionesNativas(ast)
+
     #Para mostrar la lista DE ERRORES LEXICOS Y SINTACTICOS
     for error in errores:                   
         ast.getExcepciones().append(error)
@@ -696,3 +697,19 @@ def ejecutarAnalisis(entrada):
     print(ast.getConsola())
 
     return ast.getConsola(), ast.getExcepciones()
+
+
+def generarFuncionesNativas(ast):
+
+    nombre = "toupper"
+    parametros = [{'tipo':TIPO.CADENA,'identificador':'toUpper@Parametro1'}]
+    instrucciones = []
+    toUpper = ToUpper(-1, -1, nombre, parametros, instrucciones)
+    ast.pushFuncion(toUpper)     # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
+
+
+    nombre = "tolower"
+    parametros = [{'tipo':TIPO.CADENA,'identificador':'toLower@Parametro1'}]
+    instrucciones = []
+    toLower = ToLower(-1, -1, nombre, parametros, instrucciones)
+    ast.pushFuncion(toLower)     # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)

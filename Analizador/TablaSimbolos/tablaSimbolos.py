@@ -17,9 +17,9 @@ class TablaSimbolos:
         tablaActual = self      
         #buscamos en todas las tablas enlazadas a la variable
         while tablaActual != None:
-            if id in tablaActual.tabla :
+            if id.lower() in tablaActual.tabla :
                 #si esta en la tabla, lo retorna
-                return tablaActual.tabla[id]
+                return tablaActual.tabla[id.lower()]
             else:
                 tablaActual = tablaActual.tablaAnterior
         return None
