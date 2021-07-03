@@ -3,7 +3,7 @@ from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.Instrucciones.Funcion import Funcion
 
-class ToUpper(Funcion): #hereda de funcion
+class Round(Funcion): #hereda de funcion
 
     def __init__(self, fila, columna, nombre, parametros, instrucciones):
         
@@ -15,15 +15,14 @@ class ToUpper(Funcion): #hereda de funcion
         self.tipo = TIPO.NULO
     
     def interpretar(self, tree, table):
-        simbolo = table.getTabla("toUpper@") #para que sea imposible que exista una variable con ese nombre
+        simbolo = table.getTabla("round@") #para que sea imposible que exista una variable con ese nombre
         if simbolo == None : 
-            return Excepcion("No se encontró el parámetro de ToUpper", "Semantico", self.fila, self.columna)
+            return Excepcion("No se encontró el parámetro de Round", "Semantico", self.fila, self.columna)
 
-        if simbolo.getTipo() == TIPO.CADENA:
+        if simbolo.getTipo() == TIPO.ENTERO or simbolo.getTipo() == TIPO.DECIMAL:
             
             self.tipo = simbolo.getTipo()
-            return simbolo.getValor().upper()
+            return round(simbolo.getValor())
 
         else:    
-            return Excepcion("La funcion ToUpper solo acepta cadenas", "Semantico", self.fila, self.columna)
-
+            return Excepcion("La funcion Round solo acepta enteros o decimales","Semantico", self.fila, self.columna)

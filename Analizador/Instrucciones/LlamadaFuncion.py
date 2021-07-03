@@ -35,6 +35,10 @@ class LlamadaFuncion(Instruccion):
                 if isinstance(valorExpresion, Excepcion): 
                     return valorExpresion
                 
+                #casos especificos para las funciones nativas, la verificacion de tipos se hace en cada funcion nativa
+                if funcion.parametros[cont]['identificador'].lower() == 'truncate@' or funcion.parametros[cont]['identificador'].lower() == 'round@' or funcion.parametros[cont]['identificador'].lower() == 'typeof@' or funcion.parametros[cont]['identificador'].lower() == 'length@':
+                    funcion.parametros[cont]["tipo"] = expresion.tipo
+                
                 #verificamos que los tipos sean los mismos
                 if funcion.parametros[cont]["tipo"] == expresion.tipo:
 

@@ -40,8 +40,6 @@ reservadas = {
     'read' : 'TKN_READ',
     'print' : 'TKN_PRINT',
 
-    'round' : 'TKN_ROUND',
-    'typeof' : 'TKN_TYPE_OF',
     'main' : 'TKN_MAIN'
 }
 
@@ -211,6 +209,10 @@ from Analizador.Instrucciones.Return import Return
 
 from Analizador.FuncionesNativas.ToUpper import ToUpper
 from Analizador.FuncionesNativas.ToLower import ToLower
+from Analizador.FuncionesNativas.Truncate import Truncate
+from Analizador.FuncionesNativas.Round import Round
+from Analizador.FuncionesNativas.TypeOf import TypeOf
+from Analizador.FuncionesNativas.Length import Length
 
 from Analizador.Expresiones.Primitivos import Primitivos
 from Analizador.Expresiones.Aritmetica import Aritmetica
@@ -713,14 +715,38 @@ def ejecutarAnalisis(entrada):
 def generarFuncionesNativas(ast):
 
     nombre = "toupper"
-    parametros = [{'tipo':TIPO.CADENA,'identificador':'toUpper@Parametro1'}]
+    parametros = [{'tipo':TIPO.CADENA,'identificador':'toUpper@'}]
     instrucciones = []
-    toUpper = ToUpper(-1, -1, nombre, parametros, instrucciones)
-    ast.pushFuncion(toUpper)     # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
+    funcToUpper = ToUpper(-1, -1, nombre, parametros, instrucciones)
+    ast.pushFuncion(funcToUpper)     # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
 
 
     nombre = "tolower"
-    parametros = [{'tipo':TIPO.CADENA,'identificador':'toLower@Parametro1'}]
+    parametros = [{'tipo':TIPO.CADENA,'identificador':'toLower@'}]
     instrucciones = []
-    toLower = ToLower(-1, -1, nombre, parametros, instrucciones)
-    ast.pushFuncion(toLower)     # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
+    funcToLower = ToLower(-1, -1, nombre, parametros, instrucciones)
+    ast.pushFuncion(funcToLower)     # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
+
+    nombre = "truncate"
+    parametros = [{'tipo':TIPO.NULO,'identificador':'truncate@'}] #el tipo del parametro se cambia despues
+    instrucciones = []
+    funcTruncate = Truncate(-1, -1, nombre, parametros, instrucciones)
+    ast.pushFuncion(funcTruncate)     # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
+
+    nombre = "round"
+    parametros = [{'tipo':TIPO.NULO,'identificador':'round@'}] #el tipo del parametro se cambia despues
+    instrucciones = []
+    funcRound = Round(-1, -1, nombre, parametros, instrucciones)
+    ast.pushFuncion(funcRound)     # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
+
+    nombre = "typeof"
+    parametros = [{'tipo':TIPO.NULO,'identificador':'typeof@'}] #el tipo del parametro se cambia despues
+    instrucciones = []
+    functypeOf = TypeOf(-1, -1, nombre, parametros, instrucciones)
+    ast.pushFuncion(functypeOf)     # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
+
+    nombre = "length"
+    parametros = [{'tipo':TIPO.NULO,'identificador':'length@'}] #el tipo del parametro se cambia despues
+    instrucciones = []
+    funcLength = Length(-1, -1, nombre, parametros, instrucciones)
+    ast.pushFuncion(funcLength)     # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)

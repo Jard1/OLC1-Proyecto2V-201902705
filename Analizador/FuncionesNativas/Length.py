@@ -3,7 +3,7 @@ from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.Instrucciones.Funcion import Funcion
 
-class ToUpper(Funcion): #hereda de funcion
+class Length(Funcion): #hereda de funcion
 
     def __init__(self, fila, columna, nombre, parametros, instrucciones):
         
@@ -15,15 +15,14 @@ class ToUpper(Funcion): #hereda de funcion
         self.tipo = TIPO.NULO
     
     def interpretar(self, tree, table):
-        simbolo = table.getTabla("toUpper@") #para que sea imposible que exista una variable con ese nombre
+        simbolo = table.getTabla("length@") #para que sea imposible que exista una variable con ese nombre
         if simbolo == None : 
-            return Excepcion("No se encontró el parámetro de ToUpper", "Semantico", self.fila, self.columna)
+            return Excepcion("No se encontró el parámetro de Length", "Semantico", self.fila, self.columna)
 
-        if simbolo.getTipo() == TIPO.CADENA:
+        if simbolo.getTipo() == TIPO.ARREGLO or simbolo.getTipo() == TIPO.CADENA:
             
             self.tipo = simbolo.getTipo()
-            return simbolo.getValor().upper()
+            return len(simbolo.getValor())
 
         else:    
-            return Excepcion("La funcion ToUpper solo acepta cadenas", "Semantico", self.fila, self.columna)
-
+            return Excepcion("La funcion Length solo acepta cadenas o vectores linealizados","Semantico", self.fila, self.columna)

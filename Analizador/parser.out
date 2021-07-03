@@ -6,8 +6,6 @@ Unused terminals:
     TKN_CORCHETEIZQ
     TKN_NEW
     TKN_PUNTO
-    TKN_ROUND
-    TKN_TYPE_OF
     TKN_VOID
 
 Grammar
@@ -158,11 +156,9 @@ TKN_PTCOMA           : 4 62 62 90
 TKN_PUNTO            : 
 TKN_READ             : 40
 TKN_RETURN           : 89
-TKN_ROUND            : 
 TKN_STRING           : 83
 TKN_SWITCH           : 67 68 69
 TKN_TRUE             : 48
-TKN_TYPE_OF          : 
 TKN_VAR              : 53 54
 TKN_VOID             : 
 TKN_WHILE            : 59

@@ -15,7 +15,7 @@ class ToLower(Funcion): #hereda de funcion
         self.tipo = TIPO.NULO
     
     def interpretar(self, tree, table):
-        simbolo = table.getTabla("toLower@Parametro1") #para que sea imposible que exista una variable con ese nombre
+        simbolo = table.getTabla("toLower@") #para que sea imposible que exista una variable con ese nombre
         if simbolo == None : 
             return Excepcion("No se encontró el parámetro de ToUpper", "Semantico", self.fila, self.columna)
 
@@ -25,4 +25,4 @@ class ToLower(Funcion): #hereda de funcion
             return simbolo.getValor().lower()
 
         else:    
-            return Excepcion("Semantico", "La funcion ToUpper solo acepta cadenas", self.fila, self.columna)
+            return Excepcion("La funcion ToLower solo acepta cadenas", "Semantico", self.fila, self.columna)
