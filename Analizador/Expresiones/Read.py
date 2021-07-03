@@ -1,5 +1,6 @@
 from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
 from Analizador.TablaSimbolos.tipo import TIPO
+from tkinter import simpledialog
 
 class Read(Instruccion):
 
@@ -12,11 +13,10 @@ class Read(Instruccion):
 
     def interpretar(self, tree, table):
         
-        print(tree.getConsola()) #IMPRIME LA CONSOLA
-        print("Ingreso a un READ. Ingrese el valor")
-        tree.setConsola("")     #RESETEA LA CONSOLA
+        # falta arreglar la parte visual cuando se usa el read
+        print(tree.getConsola())
         
-        # ESTO SOLO ES DE EJEMPLO realmente tiene que estar en un messaguebox
-        
-        lectura = input() # OBTENERME EL VALOR INGRESADO
-        return lectura
+        entrada = simpledialog.askstring("Read", "El valor ingresado es string por defecto")
+        if entrada == None:
+            entrada = 'null'
+        return entrada
