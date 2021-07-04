@@ -34,7 +34,6 @@ reservadas = {
     'continue' : 'TKN_CONTINUE',
 
     'func' : 'TKN_FUNC',
-    'void' : 'TKN_VOID',
     'return' : 'TKN_RETURN',
 
     'read' : 'TKN_READ',
@@ -45,7 +44,7 @@ reservadas = {
 
 tokens = [
     #*****************operadores aritmeticos****************
-    'TKN_MAS','TKN_MENOS','TKN_POR','TKN_DIV','TKN_POTENCIA','TKN_MOD','TKN_PUNTO',
+    'TKN_MAS','TKN_MENOS','TKN_POR','TKN_DIV','TKN_POTENCIA','TKN_MOD',
 
     'TKN_PTCOMA','TKN_LLAVEIZQ','TKN_LLAVEDER','TKN_PARIZQ','TKN_PARDER','TKN_CORCHETEIZQ','TKN_CORCHETEDER',
     'TKN_COMA','TKN_INCREMENTO','TKN_DECREMENTO',
@@ -68,7 +67,6 @@ t_TKN_POR       = r'\*'
 t_TKN_DIV       = r'/'
 t_TKN_POTENCIA  = r'\*\*'
 t_TKN_MOD       = r'%'
-t_TKN_PUNTO     = r'\.'
 
 t_TKN_PTCOMA        = r';'
 t_TKN_LLAVEIZQ      = r'\{'
@@ -206,6 +204,8 @@ from Analizador.Instrucciones.Main import Main
 from Analizador.Instrucciones.Funcion import Funcion
 from Analizador.Instrucciones.LlamadaFuncion import LlamadaFuncion
 from Analizador.Instrucciones.Return import Return
+from Analizador.Instrucciones.DeclaracionArrNew import DeclaracionArrNew
+from Analizador.Instrucciones.ModificarArreglo import ModificarArreglo
 
 from Analizador.FuncionesNativas.ToUpper import ToUpper
 from Analizador.FuncionesNativas.ToLower import ToLower
@@ -221,6 +221,7 @@ from Analizador.Expresiones.Logica import Logica
 from Analizador.Expresiones.Identificador import Identificador
 from Analizador.Expresiones.Read import Read
 from Analizador.Expresiones.Casteos import Casteos
+from Analizador.Expresiones.AccesoArreglo import AccesoArreglo
 
 from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
@@ -271,6 +272,8 @@ def p_instruccion(t):
                 | instSwitch
                 | incrementoDecremento finalizacion
                 | instReturn finalizacion
+                | declaracionArreglo finalizacion
+                | modificarArreglo finalizacion
     '''
     #| expresion finalizacion 
     t[0] = t[1]
@@ -371,6 +374,11 @@ def p_expresion_read(t):
 def p_expresion_casteos(t):
     'expresion : TKN_PARIZQ tipoDato TKN_PARDER expresion'
     t[0] = Casteos(t.lineno(1), get_column(input, t.slice[1]), t[2], t[4])
+
+def p_expresion_acceso_arreglos(t):
+    'expresion : ID expresionesArreglo'
+    t[0] = AccesoArreglo(t.lineno(1), get_column(input, t.slice[1]), t[1], t[2])
+
 #------------------------------PRIMITIVOS---------------------------------------
 
 def p_expresion_ID(t):
@@ -599,8 +607,39 @@ def p_instReturn(t):
     '''instReturn : TKN_RETURN expresion'''
     t[0] = Return(t.lineno(1), get_column(input, t.slice[1]),t[2])
 
+#-----------------------------------------------------------Arreglos---------------------------------------------------------
+
+def p_declaracionArreglo(t):
+    '''declaracionArreglo : declaracionNew'''
+    t[0] = t[1]
+    #| declaracionConValores
+
+def p_declaracionArreglo_declaracionNew(t):
+    '''declaracionNew : tipoDato dimensionesArreglo ID TKN_IGUAL TKN_NEW tipoDato expresionesArreglo'''
+    t[0] = DeclaracionArrNew(t.lineno(3), get_column(input, t.slice[3]), t[1], t[2], t[3], t[6], t[7] )
+
+def p_declaracionNew_dimensionesArreglo(t):
+    'dimensionesArreglo : dimensionesArreglo TKN_CORCHETEIZQ TKN_CORCHETEDER'
+    t[0] = t[1] + 1 #las dimensiones que trae, mas una posicion
+
+def p_dimensionesArreglo(t):
+    'dimensionesArreglo : TKN_CORCHETEIZQ TKN_CORCHETEDER'
+    t[0] = 1 #indica solo una dimension
+
+def p_declaracionNew_expresionesArreglo(t):
+    'expresionesArreglo : expresionesArreglo TKN_CORCHETEIZQ expresion TKN_CORCHETEDER'
+    t[1].append(t[3])
+    t[0] = t[1]
+
+def p_expresionesArreglo(t):
+    'expresionesArreglo : TKN_CORCHETEIZQ expresion TKN_CORCHETEDER'
+    t[0] = [t[2]]
+
+def p_modificarArreglo(t):
+    'modificarArreglo : ID expresionesArreglo TKN_IGUAL expresion'
+    t[0] = ModificarArreglo(t.lineno(1), get_column(input, t.slice[1]),t[1],t[2],t[4])
 #------------------------------------------Recuperacion de errores-------------------------------------------
-def p_instruccion_error(t):
+def p_error(t):
     'instruccion        : error TKN_PTCOMA'
     
     errores.append(Excepcion("No se esperaba un " + str(t[1].value) , "Sintáctico" , t.lineno(1), get_column(input, t.slice[1])))
@@ -658,7 +697,7 @@ def ejecutarAnalisis(entrada):
             if isinstance(instruccion, Funcion):
                 #guardamos la funcion en el arbol
                 ast.pushFuncion(instruccion)
-            elif isinstance(instruccion,Declaracion) or isinstance(instruccion,Asignacion) or isinstance(instruccion,incrementoDecremento):
+            elif isinstance(instruccion,Declaracion) or isinstance(instruccion,Asignacion) or isinstance(instruccion,incrementoDecremento) or isinstance(instruccion,DeclaracionArrNew) or isinstance(instruccion,ModificarArreglo) :
                 
                 value = instruccion.interpretar(ast,TSGlobal)
                 if isinstance(value, Excepcion) :
@@ -708,6 +747,7 @@ def ejecutarAnalisis(entrada):
                     break
 
     print(ast.getConsola())
+
 
     return ast.getConsola(), ast.getExcepciones()
 

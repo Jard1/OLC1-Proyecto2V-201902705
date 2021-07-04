@@ -23,6 +23,8 @@ class Length(Funcion): #hereda de funcion
             
             self.tipo = simbolo.getTipo()
             return len(simbolo.getValor())
-
+        elif simbolo.getArreglo():
+            self.tipo = simbolo.getTipo()
+            return len(simbolo.getValor())
         else:    
             return Excepcion("La funcion Length solo acepta cadenas o vectores linealizados","Semantico", self.fila, self.columna)

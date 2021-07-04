@@ -7,6 +7,7 @@ class Instruccion(ABC):
         
         self.fila = fila
         self.columna = columna
+        self.arreglo = False
         super().__init__()  #llamamos al constructor padre
 
     @abstractmethod

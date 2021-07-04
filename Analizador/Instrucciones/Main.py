@@ -37,3 +37,4 @@ class Main(Instruccion):
                 error =  Excepcion("El metodo main no puede retornar ningun valor","Semantico", instruccion.fila,instruccion.columna)
                 tree.getExcepciones().append(error)
                 tree.updateConsole(error.toString())
+            

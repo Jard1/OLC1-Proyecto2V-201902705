@@ -3,6 +3,7 @@ from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
 from Analizador.Instrucciones.Break import Break
 from Analizador.TablaSimbolos.simbolo import Simbolo
+from Analizador.Expresiones.Identificador import Identificador
 
 
 class LlamadaFuncion(Instruccion):
@@ -43,7 +44,13 @@ class LlamadaFuncion(Instruccion):
                 if funcion.parametros[cont]["tipo"] == expresion.tipo:
 
                     #------------registramos los parametros como nuevas variables-------------
-                    simbolo = Simbolo(self.fila, self.columna, str(funcion.parametros[cont]['identificador']).lower(), valorExpresion , funcion.parametros[cont]['tipo'])
+                    if isinstance (expresion, Identificador):
+                        if expresion.getArreglo():
+                            simbolo = Simbolo(self.fila, self.columna, str(funcion.parametros[cont]['identificador']).lower(), valorExpresion , funcion.parametros[cont]['tipo'],True)
+                        else:
+                            simbolo = Simbolo(self.fila, self.columna, str(funcion.parametros[cont]['identificador']).lower(), valorExpresion , funcion.parametros[cont]['tipo'])
+                    else:
+                        simbolo = Simbolo(self.fila, self.columna, str(funcion.parametros[cont]['identificador']).lower(), valorExpresion , funcion.parametros[cont]['tipo'])
                     resultTabla = nuevaTabla.setTabla(simbolo)
                     if isinstance(resultTabla, Excepcion): 
                         return resultTabla

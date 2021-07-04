@@ -19,33 +19,41 @@ class TypeOf(Funcion): #hereda de funcion
         if simbolo == None : 
             return Excepcion("No se encontró el parámetro de TypeOf", "Semantico", self.fila, self.columna)
 
-        if simbolo.getTipo() == TIPO.ENTERO:
-            self.tipo = simbolo.getTipo()
-            return tree.updateConsole('Tipo INT')
+        
+        tipoDeterminado = self.determinarTipo(simbolo.getTipo())
 
-        elif simbolo.getTipo() == TIPO.DECIMAL:
-            self.tipo = simbolo.getTipo()
-            return tree.updateConsole('Tipo DOUBLE')
+        if isinstance(tipoDeterminado, Excepcion):
+            return tipoDeterminado
 
-        elif simbolo.getTipo() == TIPO.CADENA:
+        if simbolo.getArreglo():
             self.tipo = simbolo.getTipo()
-            return tree.updateConsole('Tipo STRING')
+            return 'ARREGLO->'+tipoDeterminado
+        return tipoDeterminado
 
-        elif simbolo.getTipo() == TIPO.CHARACTER:
-            self.tipo = simbolo.getTipo()
-            return tree.updateConsole('Tipo CHAR')
+    def determinarTipo(self, valor):
+        if valor == TIPO.ENTERO:
+            self.tipo = valor
+            #return tree.updateConsole('Tipo INT')
+            return 'INT'
+        elif valor == TIPO.DECIMAL:
+            self.tipo = valor
+            return 'DOUBLE'
 
-        elif simbolo.getTipo() == TIPO.BOOLEANO:
-            self.tipo = simbolo.getTipo()
-            return tree.updateConsole('Tipo BOOL')
+        elif valor == TIPO.CADENA:
+            self.tipo = valor
+            return 'STRING'
 
-        elif simbolo.getTipo() == TIPO.NULO:
-            self.tipo = simbolo.getTipo()
-            return tree.updateConsole('Tipo NULL')
+        elif valor == TIPO.CHARACTER:
+            self.tipo = valor
+            return 'CHAR'
 
-        elif simbolo.getTipo() == TIPO.ARREGLO:
-            self.tipo = simbolo.getTipo()
-            return tree.updateConsole('Tipo ARREGLO -> X')
+        elif valor == TIPO.BOOLEANO:
+            self.tipo = valor
+            return 'BOOL'
+
+        elif valor == TIPO.NULO:
+            self.tipo = valor
+            return 'NULL'
 
         else:    
             return Excepcion("No se pudo determinar el tipo del valor ingresado","Semantico", self.fila, self.columna)
