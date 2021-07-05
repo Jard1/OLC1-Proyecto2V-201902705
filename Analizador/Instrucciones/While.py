@@ -5,6 +5,7 @@ from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
 from Analizador.Instrucciones.Break import Break
 from Analizador.Instrucciones.Continue import Continue
 from Analizador.Instrucciones.Return import Return
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 
 class While(Instruccion):
 
@@ -49,3 +50,13 @@ class While(Instruccion):
                     break
             else:
                 return Excepcion("La expresion ingresada como condicion tiene que ser booleana","Semantico", self.fila, self.columna)
+
+
+    def getNodo(self):
+        nodo = NodoASTabstract("While")
+
+        instrucciones = NodoASTabstract("Instrucciones")
+        for instr in self.instrucciones:
+            instrucciones.agregarHijoNodo(instr.getNodo())
+        nodo.agregarHijoNodo(instrucciones)
+        return nodo

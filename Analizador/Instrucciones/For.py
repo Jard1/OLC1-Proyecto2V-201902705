@@ -6,6 +6,8 @@ from Analizador.Instrucciones.Break import Break
 from Analizador.Instrucciones.Continue import Continue
 from Analizador.Instrucciones.Asignacion import Asignacion
 from Analizador.Instrucciones.Return import Return
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
+
 
 class For(Instruccion):
 
@@ -71,3 +73,12 @@ class For(Instruccion):
                     break
             else:
                 return Excepcion("La expresion ingresada como condicion tiene que ser booleana","Semantico", self.fila, self.columna)
+
+    def getNodo(self):
+        nodo = NodoASTabstract("For")
+
+        instrucciones = NodoASTabstract("Instrucciones - For")
+        for instr in self.instrucciones:
+            instrucciones.agregarHijoNodo(instr.getNodo())
+        nodo.agregarHijoNodo(instrucciones)
+        return nodo

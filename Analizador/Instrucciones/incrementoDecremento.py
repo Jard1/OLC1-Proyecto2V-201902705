@@ -3,6 +3,8 @@ from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.TablaSimbolos.simbolo import Simbolo
 from Analizador.TablaSimbolos.tipo import OperadorAritmetico
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
+
 
 class incrementoDecremento(Instruccion):
 
@@ -40,3 +42,9 @@ class incrementoDecremento(Instruccion):
         
         self.tipo = simbolo.getTipo()
         return value
+
+
+    def getNodo(self):
+        nodo = NodoASTabstract("Incremento/Decremento")
+        nodo.agregarHijo(str(self.identificador))
+        return nodo

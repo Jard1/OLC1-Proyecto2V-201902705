@@ -6,6 +6,7 @@ from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
 from Analizador.Instrucciones.Break import Break
 from Analizador.Instrucciones.Continue import Continue
 from Analizador.Instrucciones.Return import Return
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 
 class Main(Instruccion):
 
@@ -38,3 +39,12 @@ class Main(Instruccion):
                 tree.getExcepciones().append(error)
                 tree.updateConsole(error.toString())
             
+
+    def getNodo(self):
+        nodo = NodoASTabstract("Main")
+
+        instrucciones = NodoASTabstract("Instrucciones")
+        for instr in self.instrucciones:
+            instrucciones.agregarHijoNodo(instr.getNodo())
+        nodo.agregarHijoNodo(instrucciones)
+        return nodo

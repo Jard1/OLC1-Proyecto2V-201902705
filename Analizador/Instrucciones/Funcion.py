@@ -5,6 +5,8 @@ from Analizador.Instrucciones.Break import Break
 from Analizador.Instrucciones.Return import Return
 from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.Instrucciones.Continue import Continue
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
+
 
 
 class Funcion(Instruccion):
@@ -44,3 +46,21 @@ class Funcion(Instruccion):
                 return value.result
         
         return None
+
+
+    def getNodo(self):
+        nodo = NodoASTabstract("Funcion")
+        nodo.agregarHijo(str(self.nombre))
+        parametros = NodoASTabstract("Conjunto Parametros")
+        for param in self.parametros:
+            parametro = NodoASTabstract("Parametro")
+            parametro.agregarHijo(param["tipo"])
+            parametro.agregarHijo(param["identificador"])
+            parametros.agregarHijoNodo(parametro)
+        nodo.agregarHijoNodo(parametros)
+
+        instrucciones = NodoASTabstract("INSTRUCCIONES")
+        for instr in self.instrucciones:
+            instrucciones.agregarHijoNodo(instr.getNodo())
+        nodo.agregarHijoNodo(instrucciones)
+        return nodo

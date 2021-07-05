@@ -4,6 +4,8 @@ from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.Instrucciones.Break import Break
 from Analizador.Instrucciones.Continue import Continue
 from Analizador.Instrucciones.Return import Return
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
+
 
 class Case (Instruccion):
     def __init__(self, fila, columna, expresionPorValidar, instrucciones):
@@ -28,3 +30,12 @@ class Case (Instruccion):
             if isinstance(result, Return):
                 return result
             
+
+    def getNodo(self):
+        nodo = NodoASTabstract("Case")
+
+        instrucciones = NodoASTabstract("Instrucciones - Case")
+        for instr in self.instrucciones:
+            instrucciones.agregarHijoNodo(instr.getNodo())
+        nodo.agregarHijoNodo(instrucciones)
+        return nodo

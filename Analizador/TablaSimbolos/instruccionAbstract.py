@@ -13,3 +13,7 @@ class Instruccion(ABC):
     @abstractmethod
     def interpretar(self, tree, table): #arbol ast, tabla de simbolos
         pass
+
+    @abstractmethod
+    def getNodo(self):
+        pass

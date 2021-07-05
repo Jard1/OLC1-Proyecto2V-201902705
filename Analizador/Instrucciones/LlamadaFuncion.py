@@ -4,6 +4,7 @@ from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
 from Analizador.Instrucciones.Break import Break
 from Analizador.TablaSimbolos.simbolo import Simbolo
 from Analizador.Expresiones.Identificador import Identificador
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 
 
 class LlamadaFuncion(Instruccion):
@@ -68,3 +69,12 @@ class LlamadaFuncion(Instruccion):
         self.tipo = funcion.tipo
 
         return value
+
+    def getNodo(self):
+        nodo = NodoASTabstract("Llamada - Funcion")
+        nodo.agregarHijo(str(self.nombre))
+        parametros = NodoASTabstract("Parametros")
+        for param in self.parametros:
+            parametros.agregarHijoNodo(param.getNodo())
+        nodo.agregarHijoNodo(parametros)
+        return nodo

@@ -1,4 +1,5 @@
 from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 
 class Primitivos(Instruccion): #hacemos la herencia
 
@@ -12,3 +13,8 @@ class Primitivos(Instruccion): #hacemos la herencia
 
     def interpretar(self, tree, table):
         return self.valor
+
+    def getNodo(self):
+        nodo = NodoASTabstract("Primitivo")
+        nodo.agregarHijo(str(self.valor))
+        return nodo

@@ -1,6 +1,7 @@
 from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
 from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.tipo import TIPO, OperadorLogico
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 
 class Casteos(Instruccion):
     
@@ -131,3 +132,9 @@ class Casteos(Instruccion):
     def stringToBool(self,val):
         #pasa todo a minustulas y luego mira si la palabra es true
         return val.lower() in ("true")
+
+    def getNodo(self):
+        nodo = NodoASTabstract("Casteos")
+        nodo.agregarHijo(str(self.tipo))
+        nodo.agregarHijoNodo(self.expresion.getNodo())
+        return nodo

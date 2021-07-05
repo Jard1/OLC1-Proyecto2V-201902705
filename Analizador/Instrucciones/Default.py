@@ -4,6 +4,7 @@ from Analizador.Instrucciones.Break import Break
 from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
 from Analizador.Instrucciones.Continue import Continue
 from Analizador.Instrucciones.Return import Return
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 
 class Default(Instruccion):
     def __init__(self,fila, columna, instrucciones):
@@ -27,3 +28,13 @@ class Default(Instruccion):
                 break
             if isinstance(result, Return):
                 return result
+
+
+    def getNodo(self):
+        nodo = NodoASTabstract("Default")
+
+        instrucciones = NodoASTabstract("Instrucciones - Default")
+        for instr in self.instrucciones:
+            instrucciones.agregarHijoNodo(instr.getNodo())
+        nodo.agregarHijoNodo(instrucciones)
+        return nodo

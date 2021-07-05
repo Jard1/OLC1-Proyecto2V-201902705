@@ -4,6 +4,7 @@ from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
 from Analizador.TablaSimbolos.simbolo import Simbolo
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 import copy
 
 
@@ -38,16 +39,6 @@ class AccesoArreglo(Instruccion):
         else: 
             return Excepcion("La variable " + self.identificador + " no es un Arreglo.", "Semantico",self.fila, self.columna)
 
-
-    #def getNodo(self):
-     #   nodo = NodoAST("ACCESO ARREGLO")
-      #  nodo.agregarHijo(str(self.identificador))
-       # exp = NodoAST("EXPRESIONES DE LAS DIMENSIONES")
-        #for expresion in self.expresiones:
-         #   exp.agregarHijoNodo(expresion.getNodo())
-        #nodo.agregarHijoNodo(exp)
-        #return nodo
-
     def buscarDimensiones(self, tree, table, expresiones, arreglo):
         
         valor = None
@@ -70,3 +61,13 @@ class AccesoArreglo(Instruccion):
         valor = self.buscarDimensiones(tree, table, copy.copy(expresiones), arreglo[num])
             
         return valor
+
+    
+    def getNodo(self):
+        nodo = NodoASTabstract("Acceso Arreglo")
+        nodo.agregarHijo(str(self.identificador))
+        exp = NodoASTabstract("Dimensiones")
+        for expresion in self.expresiones:
+            exp.agregarHijoNodo(expresion.getNodo())
+            nodo.agregarHijoNodo(exp)
+        return nodo

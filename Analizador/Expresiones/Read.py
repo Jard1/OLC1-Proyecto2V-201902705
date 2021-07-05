@@ -1,6 +1,7 @@
 from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
 from Analizador.TablaSimbolos.tipo import TIPO
 from tkinter import simpledialog
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 
 class Read(Instruccion):
 
@@ -20,3 +21,7 @@ class Read(Instruccion):
         if entrada == None:
             entrada = 'null'
         return entrada
+
+    def getNodo(self):
+        nodo = NodoASTabstract("Read")
+        return nodo

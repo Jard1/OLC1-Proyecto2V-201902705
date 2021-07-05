@@ -2,6 +2,7 @@ from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
 from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.TablaSimbolos.tipo import OperadorAritmetico
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 
 
 class Aritmetica(Instruccion):
@@ -251,3 +252,15 @@ class Aritmetica(Instruccion):
     def stringToBool(self,val):
         #pasa todo a minustulas y luego mira si la palabra es true
         return val.lower() in ("true")
+
+    def getNodo(self):
+        nodo = NodoASTabstract("Aritmetica")
+        if self.ExpresionDer != None:
+            nodo.agregarHijoNodo(self.ExpresionIzq.getNodo())
+            nodo.agregarHijo(str(self.operador))
+            nodo.agregarHijoNodo(self.ExpresionDer.getNodo())
+        else:
+            nodo.agregarHijo(str(self.operador))
+            nodo.agregarHijoNodo(self.ExpresionIzq.getNodo())
+        
+        return nodo

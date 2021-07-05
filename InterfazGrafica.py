@@ -30,7 +30,7 @@ class InterfazGrafica():
         #--------------Menu opciones-----------------------
         reportMenu = Menu(barMenu, tearoff = 0)
         reportMenu.add_command(label = "Tabla de simbolos")
-        reportMenu.add_command(label = "Arbol AST")
+        reportMenu.add_command(label = "Arbol AST", command=self.abrirAST)
         reportMenu.add_separator()
         reportMenu.add_command(label = "Reporte de errores", command=self.abrirReporteErrores)
         barMenu.add_cascade(label =  "Reportes", menu = reportMenu)
@@ -163,6 +163,8 @@ class InterfazGrafica():
 
     def abrirReporteErrores(self):
         self.controlador.abrirReporteErrores()
+    def abrirAST(self):
+        self.controlador.abrirAST()
     def guardarComo(self):
         self.controlador.guardarComo()
     def guardar(self):

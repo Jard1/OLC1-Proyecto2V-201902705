@@ -110,3 +110,6 @@ class controladorInterfaz():
 
     def abrirReporteErrores(self):
         os.system('ReporteErrores.html')
+
+    def abrirAST(self):
+        os.system('arbolAST.svg')

@@ -3,6 +3,7 @@ from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
 from Analizador.TablaSimbolos.simbolo import Simbolo
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 import copy
 
 
@@ -67,3 +68,16 @@ class DeclaracionArrNew(Instruccion):
             arreglo.append(self.crearDimensiones(tree, table, copy.copy(expresiones)))
             cont += 1
         return arreglo
+
+
+    def getNodo(self):
+        nodo = NodoASTabstract("Declaracion Arreglo - Tipo New")
+        nodo.agregarHijo(str(self.tipoizq))
+        nodo.agregarHijo(str(self.dimension))
+        nodo.agregarHijo(str(self.identificador))
+        nodo.agregarHijo(str(self.tipoder))
+        exp = NodoASTabstract("Dimensiones")
+        for expresion in self.expresionesDimension:
+            exp.agregarHijoNodo(expresion.getNodo())
+        nodo.agregarHijoNodo(exp)
+        return nodo

@@ -1,6 +1,8 @@
 from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
 from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.tipo import TIPO
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
+
 
 class Imprimir(Instruccion): #hacemos la herencia
 
@@ -26,3 +28,9 @@ class Imprimir(Instruccion): #hacemos la herencia
         
         tree.updateConsole(value)
         return None 
+
+
+    def getNodo(self):
+        nodo = NodoASTabstract("Imprimir")
+        nodo.agregarHijoNodo(self.expresion.getNodo())
+        return nodo

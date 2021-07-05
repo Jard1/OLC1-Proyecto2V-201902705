@@ -2,6 +2,7 @@
 from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.Instrucciones.Funcion import Funcion
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 
 class Length(Funcion): #hereda de funcion
 
@@ -28,3 +29,9 @@ class Length(Funcion): #hereda de funcion
             return len(simbolo.getValor())
         else:    
             return Excepcion("La funcion Length solo acepta cadenas o vectores linealizados","Semantico", self.fila, self.columna)
+
+    #def getNodo(self):
+     #   nodo = NodoASTabstract("Length")
+      #  nodo.agregarHijo(str(self.nombre))
+        
+       # return nodo

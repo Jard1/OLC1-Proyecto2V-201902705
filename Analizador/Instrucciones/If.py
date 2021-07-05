@@ -5,6 +5,8 @@ from Analizador.Instrucciones.Break import Break
 from Analizador.Instrucciones.Continue import Continue
 from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
 from Analizador.Instrucciones.Return import Return
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
+
 
 class If(Instruccion):
 
@@ -72,6 +74,26 @@ class If(Instruccion):
             return Excepcion("La expresion ingresada como condicion tiene que ser booleana","Semantico", self.fila, self.columna)
     
 
-def stringToBool(self,val):
-    #pasa todo a minustulas y luego mira si la palabra es true
-    return val.lower() in ("true")
+    def getNodo(self):
+        nodo = NodoASTabstract("If")
+
+        instruccionesIf = NodoASTabstract("Instrucciones - If")
+        for instr in self.instruccionesIf:
+            instruccionesIf.agregarHijoNodo(instr.getNodo())
+        nodo.agregarHijoNodo(instruccionesIf)
+
+        if self.instruccionesElse != None:
+            instruccionesElse = NodoASTabstract("Instrucciones - Else")
+            for instr in self.instruccionesElse:
+                instruccionesElse.agregarHijoNodo(instr.getNodo())
+            nodo.agregarHijoNodo(instruccionesElse) 
+        elif self.elseIf != None:
+            nodo.agregarHijoNodo(self.elseIf.getNodo())
+
+        return nodo
+        
+    def stringToBool(self,val):
+        #pasa todo a minustulas y luego mira si la palabra es true
+        return val.lower() in ("true")
+
+

@@ -1,6 +1,7 @@
 from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
 from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.tipo import TIPO, OperadorRelacional
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 
 class Relacional(Instruccion):
     
@@ -176,3 +177,11 @@ class Relacional(Instruccion):
     def stringToBool(self,val):
         #pasa todo a minustulas y luego mira si la palabra es true
         return val.lower() in ("true")
+
+    def getNodo(self):
+        nodo = NodoASTabstract("Relacional")
+        nodo.agregarHijoNodo(self.ExpresionIzq.getNodo())
+        nodo.agregarHijo(str(self.operador))
+        nodo.agregarHijoNodo(self.ExpresionDer.getNodo())
+        
+        return nodo

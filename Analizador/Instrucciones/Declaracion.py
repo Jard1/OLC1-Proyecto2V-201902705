@@ -2,6 +2,7 @@ from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
 from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.TablaSimbolos.simbolo import Simbolo
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 
 class Declaracion(Instruccion):
 
@@ -39,3 +40,8 @@ class Declaracion(Instruccion):
             return None #la declaracion fue correcta
 
     
+    def getNodo(self):
+        nodo = NodoASTabstract("Declaracion")
+        nodo.agregarHijo(str(self.identificador))
+        nodo.agregarHijoNodo(self.expresion.getNodo())
+        return nodo

@@ -1,5 +1,6 @@
 from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
 from Analizador.TablaSimbolos.Excepcion import Excepcion
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 
 class Identificador(Instruccion):
     def __init__(self, fila, columna, identificador):
@@ -23,3 +24,8 @@ class Identificador(Instruccion):
 
     def getArreglo(self):
         return self.arreglo
+
+    def getNodo(self):
+        nodo = NodoASTabstract("Identificador")
+        nodo.agregarHijo(str(self.identificador))
+        return nodo

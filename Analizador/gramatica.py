@@ -3,6 +3,8 @@
 #***************************************************************************************************************************
 
 from Analizador.TablaSimbolos.Excepcion import Excepcion
+import os
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 errores = []
 
 
@@ -206,6 +208,7 @@ from Analizador.Instrucciones.LlamadaFuncion import LlamadaFuncion
 from Analizador.Instrucciones.Return import Return
 from Analizador.Instrucciones.DeclaracionArrNew import DeclaracionArrNew
 from Analizador.Instrucciones.ModificarArreglo import ModificarArreglo
+from Analizador.Instrucciones.DeclaracionArrayValores import DeclaracionArrayValores
 
 from Analizador.FuncionesNativas.ToUpper import ToUpper
 from Analizador.FuncionesNativas.ToLower import ToLower
@@ -610,9 +613,10 @@ def p_instReturn(t):
 #-----------------------------------------------------------Arreglos---------------------------------------------------------
 
 def p_declaracionArreglo(t):
-    '''declaracionArreglo : declaracionNew'''
+    '''declaracionArreglo : declaracionNew
+                          | declaracionConValores
+    '''
     t[0] = t[1]
-    #| declaracionConValores
 
 def p_declaracionArreglo_declaracionNew(t):
     '''declaracionNew : tipoDato dimensionesArreglo ID TKN_IGUAL TKN_NEW tipoDato expresionesArreglo'''
@@ -638,8 +642,33 @@ def p_expresionesArreglo(t):
 def p_modificarArreglo(t):
     'modificarArreglo : ID expresionesArreglo TKN_IGUAL expresion'
     t[0] = ModificarArreglo(t.lineno(1), get_column(input, t.slice[1]),t[1],t[2],t[4])
+
+#----------------------------------Tipo 2 ----------------------------------
+def p_declaracionArreglo_declaracionConValores(t):
+    'declaracionConValores : tipoDato dimensionesArreglo ID TKN_IGUAL expresionesArregloTipo2'
+    t[0] = DeclaracionArrayValores(t.lineno(3), get_column(input, t.slice[3]), t[1], t[2], t[3],t[5])
+
+def p_expresionesArregloTipo2(t):
+    'expresionesArregloTipo2 : TKN_LLAVEIZQ lista_valores_array2 TKN_LLAVEDER'
+    t[0] = t[2]
+
+def p_lista_valores_array2(t):
+    'lista_valores_array2 : lista_valores_array2 TKN_COMA valores_array'
+    t[1].append(t[3])
+    t[0] = t[1]
+
+def p_lista_valores_array2_valores_array(t):
+    'lista_valores_array2 : valores_array'
+    t[0] = [t[1]]
+
+def p_valores_array(t):
+    '''valores_array : expresion
+                     | expresionesArregloTipo2
+    '''
+    t[0] = t[1]
+
 #------------------------------------------Recuperacion de errores-------------------------------------------
-def p_error(t):
+def p_instruccion_error(t):
     'instruccion        : error TKN_PTCOMA'
     
     errores.append(Excepcion("No se esperaba un " + str(t[1].value) , "Sintáctico" , t.lineno(1), get_column(input, t.slice[1])))
@@ -748,6 +777,19 @@ def ejecutarAnalisis(entrada):
 
     print(ast.getConsola())
 
+    init = NodoASTabstract("RAIZ")
+    instr = NodoASTabstract("INSTRUCCIONES")
+
+    for instruccion in ast.getInstrucciones():
+        instr.agregarHijoNodo(instruccion.getNodo())
+
+    init.agregarHijoNodo(instr)
+    grafo = ast.getContenidoDotAST(init) #DEVUELVE EL CODIGO GRAPHVIZ DEL AST
+
+    archivo = open('./arbolAST.dot','w')
+    archivo.write(grafo)
+    archivo.close()
+    os.system('dot -Tsvg arbolAST.dot -o arbolAST.svg')
 
     return ast.getConsola(), ast.getExcepciones()
 

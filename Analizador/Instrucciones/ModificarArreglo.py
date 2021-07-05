@@ -3,6 +3,7 @@ from Analizador.TablaSimbolos.tipo import TIPO
 from Analizador.TablaSimbolos.Excepcion import Excepcion
 from Analizador.TablaSimbolos.instruccionAbstract import Instruccion
 from Analizador.TablaSimbolos.simbolo import Simbolo
+from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 import copy
 
 
@@ -77,3 +78,15 @@ class ModificarArreglo(Instruccion):
             arreglo[num] = value
 
         return None
+
+
+    def getNodo(self):
+        nodo = NodoASTabstract("Modificar Arreglo")
+        nodo.agregarHijo(str(self.identificador))
+        exp = NodoASTabstract("Dimensiones")
+        for expresion in self.expresionesArreglo:
+            exp.agregarHijoNodo(expresion.getNodo())
+        nodo.agregarHijoNodo(exp)
+        nodo.agregarHijoNodo(self.expresion.getNodo())
+        return nodo
+
