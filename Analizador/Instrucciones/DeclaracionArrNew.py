@@ -75,7 +75,7 @@ class DeclaracionArrNew(Instruccion):
         nodo.agregarHijo(str(self.tipoizq))
         nodo.agregarHijo(str(self.dimension))
         nodo.agregarHijo(str(self.identificador))
-        nodo.agregarHijo(str(self.tipoder))
+        nodo.agregarHijo(str(self.tipoDer))
         exp = NodoASTabstract("Dimensiones")
         for expresion in self.expresionesDimension:
             exp.agregarHijoNodo(expresion.getNodo())

@@ -52,7 +52,7 @@ class InterfazGrafica():
         lblDebugger.config(font = ("Arial", 14))
         lblDebugger.grid(row = 0, column = 2, padx= 50)
 
-        btnDebugger = Button(frameArriba, text = "Siguiente", bg = "yellow", width = "15", height = "1" )
+        btnDebugger = Button(frameArriba, text = "Iniciar", bg = "yellow", width = "15", height = "1", command=self.debuggear)
         btnDebugger.config(font = ("Arial", 16))
         btnDebugger.grid(row = 0, column = 3)
 
@@ -170,7 +170,10 @@ class InterfazGrafica():
     def guardar(self):
         self.controlador.guardar()
     def ejecutar(self):
-        self.controlador.ejecutar()
+        self.controlador.ejecutar(False)
+    def debuggear(self):
+        self.controlador.ejecutar(True)
+
     #--------------------------------------------------------------------------------
 
     def accion_scroll(self, *L):

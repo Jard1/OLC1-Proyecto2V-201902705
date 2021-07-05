@@ -63,7 +63,7 @@ class controladorInterfaz():
         rutaArchivo = filedialog.askopenfilename(filetypes=(("Archivos JPR", "*.jpr*"),("All files", "*.*") ))
 
         if rutaArchivo != "":
-            fileText = open(rutaArchivo)
+            fileText = open(rutaArchivo, encoding="utf8")
             
             text = fileText.read()
             self.txtInput.delete(1.0, END)
@@ -97,13 +97,13 @@ class controladorInterfaz():
         rutaArchivo=""
         self.lbArchivoValor.config(text=rutaArchivo)
 
-    def ejecutar(self):
+    def ejecutar(self, debbuger):
         graficador = graficadorReportes()
 
         self.txtConsola.delete(1.0, END)
         textoEntrada = self.txtInput.get(1.0,END)
 
-        salida,errores = ejecutarAnalisis(textoEntrada,self.txtConsola)
+        salida,errores = ejecutarAnalisis(textoEntrada,self.txtConsola, debbuger)
         self.txtConsola.insert(INSERT, salida)
         
         graficador.graficarTablaErrores(errores)

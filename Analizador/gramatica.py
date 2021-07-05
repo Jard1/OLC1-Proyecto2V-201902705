@@ -5,6 +5,7 @@
 from Analizador.TablaSimbolos.Excepcion import Excepcion
 import os
 from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
+from Analizador.Instrucciones.ventataDebugger import DebuggerDialog
 errores = []
 
 reservadas = {
@@ -700,7 +701,7 @@ from Analizador.TablaSimbolos.ArbolAST import Arbol
 from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
 from Analizador.Instrucciones.Break import Break
 
-def ejecutarAnalisis(entrada, consola):
+def ejecutarAnalisis(entrada, consola, debugger):
 
     consolaSalida = consola
     instrucciones = parse(entrada)
@@ -723,6 +724,10 @@ def ejecutarAnalisis(entrada, consola):
     
     if ast.getInstrucciones() != None:
         for instruccion in ast.getInstrucciones():
+            if debugger == True:
+                respuesta = DebuggerDialog(instruccion.fila)
+                if not respuesta.result:
+                    debugger = False
             #afuera del main, solo se permiten declaraciones y asignaciones
             if isinstance(instruccion, Funcion):
                 #guardamos la funcion en el arbol
@@ -759,6 +764,10 @@ def ejecutarAnalisis(entrada, consola):
 
             if isinstance(instruccion, Main):
                 
+                if debugger == True:
+                    respuesta = DebuggerDialog(instruccion.fila)
+                    if not respuesta.result:
+                        debugger = False
                 if contMain == 1:
                     #solo si hay un main se ejecuta el programa
                     value = instruccion.interpretar(ast,TSGlobal)
@@ -787,7 +796,7 @@ def ejecutarAnalisis(entrada, consola):
     init.agregarHijoNodo(instr)
     grafo = ast.getContenidoDotAST(init) #DEVUELVE EL CODIGO GRAPHVIZ DEL AST
 
-    archivo = open('./arbolAST.dot','w')
+    archivo = open('./arbolAST.dot','w', encoding="utf8")
     archivo.write(grafo)
     archivo.close()
     os.system('dot -Tsvg arbolAST.dot -o arbolAST.svg')
