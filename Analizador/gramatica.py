@@ -7,7 +7,6 @@ import os
 from Analizador.TablaSimbolos.nodoASTabstract import NodoASTabstract
 errores = []
 
-
 reservadas = {
     #------------tipos de datos
     'int' : 'TKN_INT',
@@ -701,13 +700,15 @@ from Analizador.TablaSimbolos.ArbolAST import Arbol
 from Analizador.TablaSimbolos.tablaSimbolos import TablaSimbolos
 from Analizador.Instrucciones.Break import Break
 
-def ejecutarAnalisis(entrada):
+def ejecutarAnalisis(entrada, consola):
 
+    consolaSalida = consola
     instrucciones = parse(entrada)
     ast = Arbol(instrucciones)
 
     TSGlobal = TablaSimbolos()
     ast.setTSglobal(TSGlobal)
+    ast.setInputConsola(consola)
 
     generarFuncionesNativas(ast)
 

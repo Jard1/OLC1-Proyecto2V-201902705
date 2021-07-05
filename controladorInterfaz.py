@@ -103,7 +103,7 @@ class controladorInterfaz():
         self.txtConsola.delete(1.0, END)
         textoEntrada = self.txtInput.get(1.0,END)
 
-        salida,errores = ejecutarAnalisis(textoEntrada)
+        salida,errores = ejecutarAnalisis(textoEntrada,self.txtConsola)
         self.txtConsola.insert(INSERT, salida)
         
         graficador.graficarTablaErrores(errores)

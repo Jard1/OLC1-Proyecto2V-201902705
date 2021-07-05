@@ -43,5 +43,6 @@ class Declaracion(Instruccion):
     def getNodo(self):
         nodo = NodoASTabstract("Declaracion")
         nodo.agregarHijo(str(self.identificador))
-        nodo.agregarHijoNodo(self.expresion.getNodo())
+        if self.expresion != None:
+            nodo.agregarHijoNodo(self.expresion.getNodo())
         return nodo

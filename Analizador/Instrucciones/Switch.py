@@ -53,24 +53,17 @@ class Switch(Instruccion):
                 return None
 
 
-def getNodo(self):
-    nodo = NodoASTabstract("Switch")
+    def getNodo(self):
+        nodo = NodoASTabstract("Switch")
 
-    nodoExp = NodoASTabstract("Expresion")
-    nodoExp.agregarHijoNodo(self.expresionPorEvaluar.getNodo())
-    nodo.agregarHijoNodo(nodoExp)
+        nodoExp = NodoASTabstract("Expresion")
+        nodoExp.agregarHijoNodo(self.expresionPorEvaluar.getNodo())
+        nodo.agregarHijoNodo(nodoExp)
 
-    if self.listaCases != None:
-        instrucciones = NodoASTabstract("Instrucciones - Case")
-        for cases in self.listaCases:
-            instrucciones.agregarHijoNodo(cases.getNodo())
-        nodo.agregarHijoNodo(instrucciones)
-    
-
-    if self.default != None:
-        instruccionesDefault = NodoASTabstract("Instrucciones - Default")
-        for instr in self.instruccionesElse:
-            instruccionesDefault.agregarHijoNodo(instr.getNodo())
-        nodo.agregarHijoNodo(instruccionesDefault) 
-
-    return nodo
+        if self.listaCases != None:
+            instrucciones = NodoASTabstract("Instrucciones - Case")
+            for cases in self.listaCases:
+                instrucciones.agregarHijoNodo(cases.getNodo())
+            nodo.agregarHijoNodo(instrucciones)
+        
+        return nodo

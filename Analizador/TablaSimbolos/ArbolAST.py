@@ -12,6 +12,7 @@ class Arbol:
         self.cont = 0
 
         self.instrucciones = instrucciones
+        self.InputConsola = None
 
     def getConsola(self):
         return self.consola
@@ -21,6 +22,12 @@ class Arbol:
 
     def getExcepciones(self):
         return self.excepciones
+
+    def setInputConsola(self, InputConsola):
+        self.InputConsola = InputConsola
+
+    def getInputConsola(self):
+        return self.InputConsola
 
     def setExcepciones(self, excepciones):
         self.excepciones = excepciones
